@@ -16,4 +16,12 @@ export class PetsService {
   async findAll(): Promise<Pet[]> {
     return this.petModel.find().exec();
   }
+
+  async findAllById(petId: string): Promise<Pet> {
+    return this.petModel.findById(petId);
+  }
+
+  async removeById(petId: string): Promise<void> {
+    this.petModel.findByIdAndRemove(petId);
+  }
 }
