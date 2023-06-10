@@ -6,6 +6,7 @@ async function bootstrap() {
   app.setGlobalPrefix('apl-back-front/v1');
 
   app.enableCors();
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
+  console.log('Running app at: ' + process.env.PORT);
 }
 bootstrap();
