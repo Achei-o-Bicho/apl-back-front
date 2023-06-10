@@ -10,7 +10,7 @@ export class PetsService {
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
     const createdPet = new this.petModel(createPetDto);
-    return createdPet.save();
+    return await createdPet.save();
   }
 
   async findAll(): Promise<Pet[]> {
@@ -22,6 +22,6 @@ export class PetsService {
   }
 
   async removeById(petId: string): Promise<void> {
-    this.petModel.findByIdAndRemove(petId);
+    await this.petModel.findByIdAndRemove(petId);
   }
 }

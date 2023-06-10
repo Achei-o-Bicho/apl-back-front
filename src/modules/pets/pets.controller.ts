@@ -1,6 +1,15 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
+import { CreatePetDto } from './dto/pet.dto';
 
 @Controller('pets')
 export class PetsController {
@@ -21,5 +30,12 @@ export class PetsController {
     if (!pets) res.status(HttpStatus.NO_CONTENT);
 
     res.status(HttpStatus.OK).json(pets);
+  }
+
+  @Post()
+  public async postPet(@Body() createPet: CreatePetDto, @Res() res: Response) {
+    const petCreated = await this.petService.create(createPet);
+
+    res.status(HttpStatus.CREATED).json(petCreated);
   }
 }
