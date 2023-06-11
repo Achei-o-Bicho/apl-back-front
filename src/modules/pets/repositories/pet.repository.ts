@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePetDto } from '../dto/pet.dto';
 import { Pet } from '../pet.schema';
-import { IPetRepository } from './pet.repository.abstract';
+import { PetRepositoryService } from './pet.repository.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
-export class PetRepository implements IPetRepository {
+export class PetRepository implements PetRepositoryService {
   constructor(@InjectModel(Pet.name) private petModel: Model<Pet>) {}
 
   async create(createPet: CreatePetDto): Promise<Pet> {
