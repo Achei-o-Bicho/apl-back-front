@@ -3,6 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Pet, PetSchema } from './pet.schema';
 import { PetsController } from './pets.controller';
 import { PetsService } from './pet.service';
+import { PetRepositoryService } from './repositories/pet.repository.service';
+import { PetRepository } from './repositories/pet.repository';
 
 @Module({
   imports: [
@@ -11,6 +13,12 @@ import { PetsService } from './pet.service';
     ]),
   ],
   controllers: [PetsController],
-  providers: [PetsService],
+  providers: [
+    PetsService,
+    {
+      provide: PetRepositoryService,
+      useClass: PetRepository,
+    },
+  ],
 })
 export class PetsModule {}
