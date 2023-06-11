@@ -1,12 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Pet } from './pet.schema';
 import { CreatePetDto } from './dto/pet.dto';
-import { PetRepositoryService } from './repositories/pet.repository.service';
+import { PetRepository } from './repositories/pet.repository';
 
 @Injectable()
 export class PetsService {
   private readonly logger = new Logger(PetsService.name);
-  constructor(private readonly petRepository: PetRepositoryService) {}
+  constructor(private readonly petRepository: PetRepository) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
     this.logger.log('Creating Pet');
