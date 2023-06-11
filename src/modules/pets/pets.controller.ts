@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Res,
+  Logger,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
@@ -13,29 +14,45 @@ import { CreatePetDto } from './dto/pet.dto';
 
 @Controller('pets')
 export class PetsController {
+  private readonly logger = new Logger(PetsController.name);
   constructor(private petService: PetsService) {}
   @Get(':/id')
   public async getPetById(@Param('id') id: string, @Res() res: Response) {
-    const petFounded = await this.petService.findAllById(id);
+    try {
+      const petFounded = await this.petService.findAllById(id);
 
-    if (!petFounded) res.status(HttpStatus.NOT_FOUND);
+      if (!petFounded) res.status(HttpStatus.NOT_FOUND);
 
-    res.status(HttpStatus.OK).json(petFounded);
+      res.status(HttpStatus.OK).json(petFounded);
+    } catch (err) {
+      this.logger.error(err);
+      res.status(500);
+    }
   }
 
   @Get()
   public async getAllPets(@Res() res: Response) {
-    const pets = await this.petService.findAll();
+    try {
+      const pets = await this.petService.findAll();
 
-    if (!pets) res.status(HttpStatus.NO_CONTENT);
+      if (!pets) res.status(HttpStatus.NO_CONTENT);
 
-    res.status(HttpStatus.OK).json(pets);
+      res.status(HttpStatus.OK).json(pets);
+    } catch (err) {
+      this.logger.error(err);
+      res.status(500);
+    }
   }
 
   @Post()
   public async postPet(@Body() createPet: CreatePetDto, @Res() res: Response) {
-    const petCreated = await this.petService.create(createPet);
+    try {
+      const petCreated = await this.petService.create(createPet);
 
-    res.status(HttpStatus.CREATED).json(petCreated);
+      res.status(HttpStatus.CREATED).json(petCreated);
+    } catch (err) {
+      this.logger.error(err);
+      res.status(500);
+    }
   }
 }
