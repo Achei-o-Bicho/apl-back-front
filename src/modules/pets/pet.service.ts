@@ -5,7 +5,6 @@ import { PetRepository } from './repositories/pet.repository';
 
 @Injectable()
 export class PetsService {
-  private readonly logger = new Logger(PetsService.name);
   constructor(private readonly petRepository: PetRepository) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
