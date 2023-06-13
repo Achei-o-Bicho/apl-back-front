@@ -9,22 +9,18 @@ export class PetsService {
   constructor(private readonly petRepository: PetRepository) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
-    this.logger.log('Creating Pet');
     return await this.petRepository.create(createPetDto);
   }
 
   async findAll(): Promise<Pet[]> {
-    this.logger.log('Getting All Pets');
     return await this.petRepository.findAll();
   }
 
   async findAllById(petId: string): Promise<Pet> {
-    this.logger.log('Getting Pet by id:' + petId);
     return this.petRepository.findAllById(petId);
   }
 
   async removeById(petId: string): Promise<void> {
-    this.logger.log('Removing Pet by id:' + petId);
     return this.petRepository.removeById(petId);
   }
 }
