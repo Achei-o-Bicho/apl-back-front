@@ -1,6 +1,5 @@
-export class CreateUserDto{
-  id: Uint8Array[16];
+export class CreateUserDto {
   document: string;
   name: string;
   contact: string;
-} 
+}
