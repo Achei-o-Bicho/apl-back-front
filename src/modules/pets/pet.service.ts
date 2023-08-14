@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Pet } from './pet.schema';
 import { CreatePetDto } from './dto/pet.dto';
 import { PetRepository } from './repositories/pet.repository';
@@ -16,10 +16,14 @@ export class PetsService {
   }
 
   async findAllById(petId: string): Promise<Pet> {
+    const petFounded = this.petRepository.findAllById(petId);
+    if (!petFounded) throw new NotFoundException(`Pet ${petId} not found`);
     return this.petRepository.findAllById(petId);
   }
 
   async removeById(petId: string): Promise<void> {
+    const deletedPet = this.petRepository.removeById(petId);
+    if (!deletedPet) throw new NotFoundException(`Pet ${petId} not found`);
     return this.petRepository.removeById(petId);
   }
 }
