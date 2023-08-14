@@ -1,5 +1,5 @@
 export class IUser {
-  id: Uint8Array[16];
+  userId: string;
   document: string;
   name: string;
   contact: string;
