@@ -8,6 +8,7 @@ import {
   Res,
   Logger,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
@@ -51,6 +52,18 @@ export class PetsController {
       const petCreated = await this.petService.create(createPet);
 
       res.status(HttpStatus.CREATED).json(petCreated);
+    } catch (err) {
+      this.logger.error(err);
+      res.status(500);
+    }
+  }
+
+  @Delete('/:id')
+  public async delete(@Res() res, @Param('id') idPet: string) {
+    try {
+      const petDeleted = await this.petService.removeById(idPet);
+
+      res.status(HttpStatus.NO_CONTENT);
     } catch (err) {
       this.logger.error(err);
       res.status(500);
