@@ -1,29 +1,96 @@
-import { Controller, Get, Post, Put, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Res,
+  Body,
+  HttpStatus,
+} from '@nestjs/common';
+import { CreateUserDto } from './dto/user.dto';
+import { UsersService } from './users.service';
 
-@Controller('apl-back-front/users')
+@Controller('/users')
 export class UsersController {
-  @Get()
-  findAll(): string {
-    return 'findAll';
-  }
-
-  @Get('/findById')
-  findById(): string {
-    return 'findByid';
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(): string {
-    return 'create';
+  async create(@Res() response, @Body() createUserDto: CreateUserDto) {
+    try {
+      const newUser = await this.usersService.create(createUserDto);
+      return response.status(HttpStatus.CREATED).json({
+        message: 'User has been created successfully',
+        newUser,
+      });
+    } catch (err) {
+      return response.status(err.status).json({
+        message: 'Error user not created',
+        error: err.response,
+      });
+    }
   }
 
-  @Put()
-  update(): string {
-    return 'update';
+  @Get()
+  async findAll(@Res() response) {
+    try {
+      const userData = await this.usersService.findAll();
+      return response.status(HttpStatus.OK).json({
+        message: 'All users data found successfully',
+        userData,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
-  @Delete()
-  delete(): string {
-    return 'delete';
+  @Get('/:id')
+  async findById(@Res() response, @Param('id') userId: string) {
+    try {
+      const existingUser = await this.usersService.findById(userId);
+      return response.status(HttpStatus.OK).json({
+        message: 'User found successfully',
+        existingUser,
+      });
+    } catch (err) {
+      return response.status(err.status).json({
+        message: 'User not found',
+        err: err.response,
+      });
+    }
+  }
+
+  @Put('/:id')
+  async update(
+    @Res() response,
+    @Param('id') userId: string,
+    @Body() updatedUserDto: CreateUserDto,
+  ) {
+    try {
+      const existingUser = this.usersService.updateUserById(
+        userId,
+        updatedUserDto,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'User has been successfully updated',
+        updatedUserDto,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
+  @Delete('/:id')
+  async delete(@Res() response, @Param('id') userId: string) {
+    try {
+      const deletedUser = await this.usersService.deleteUserById(userId);
+      return response.status(HttpStatus.OK).json({
+        message: 'User deleted successfully',
+        deletedUser,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 }
