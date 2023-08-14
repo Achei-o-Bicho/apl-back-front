@@ -7,7 +7,6 @@ import {
   Post,
   Res,
   Logger,
-  Query,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
