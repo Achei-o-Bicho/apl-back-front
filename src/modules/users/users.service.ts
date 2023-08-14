@@ -15,7 +15,7 @@ export class UsersService {
   }
 
   async findAll(): Promise<IUser[]> {
-    const userData = await this.userModel.find();
+    const userData = await this.userModel.find().exec();
     if (userData.length == 0 || !userData)
       throw new NotFoundException('Users data not found');
     return userData;
