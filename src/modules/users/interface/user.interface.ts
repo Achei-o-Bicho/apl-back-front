@@ -1,6 +1,8 @@
+import { IContact } from '../dto/user.dto';
+
 export class IUser {
-  userId: string;
   document: string;
   name: string;
-  contact: string;
+  contact: IContact;
+  password: string;
 }
