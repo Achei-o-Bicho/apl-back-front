@@ -1,20 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { IContact } from '../dto/user.dto';
+import { IContact } from '../dto/user.dto'; // Verifique se o caminho para o arquivo está correto
 
 @Schema()
-export class User {
+export class User extends Document {
   @Prop({ default: uuidv4 })
   userId: string;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   document: string;
 
   @Prop()
   name: string;
 
-  @Prop()
+  @Prop({ type: Object }) // Use 'Object' como tipo para campos complexos como objetos personalizados
   contact: IContact;
 
   @Prop()
@@ -22,4 +22,4 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-export type UserDocument = HydratedDocument<User>;
+export type UserDocument = User & Document;
