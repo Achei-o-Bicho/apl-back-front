@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+import { IContact } from '../dto/user.dto';
 
 @Schema()
 export class User {
@@ -14,7 +15,7 @@ export class User {
   name: string;
 
   @Prop()
-  contact: string;
+  contact: IContact;
 
   @Prop()
   password: string;
