@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
 import { IUser } from './interface/user.interface';
 import { User } from './schema/user.schema';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class UsersService {
@@ -44,5 +45,30 @@ export class UsersService {
     const deletedUser = await this.userModel.findByIdAndDelete(userId);
     if (!deletedUser) throw new NotFoundException(`User ${userId} not found`);
     return deletedUser;
+  }
+
+  async login(loginDto: LoginDto): Promise<IUser> {
+    const { email, password } = loginDto;
+
+    const user = await this.userModel.findOne({ email });
+
+    if (!user) throw new NotFoundException(`User ${email} not found`);
+
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      throw new NotFoundException(); // Senha incorreta
+    }
+
+    return user;
+  }
+
+  async findByEmailAddress(emailAddress: string): Promise<IUser> {
+    const user = this.userModel
+      .findOne({ 'contact.emailAddress': emailAddress })
+      .exec();
+
+    if (!user) throw new NotFoundException(`User ${emailAddress} not found`);
+
+    return user;
   }
 }
