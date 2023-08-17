@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { IContact } from '../dto/user.dto';
+import { ContactDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
 @Schema()
@@ -16,7 +16,7 @@ export class User extends Document {
   name: string;
 
   @Prop({ type: Object })
-  contact: IContact;
+  contact: ContactDto;
 
   @Prop()
   password: string;

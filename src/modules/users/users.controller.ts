@@ -11,12 +11,21 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
-import { LoginDto } from './dto/login.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { IUser } from './interface/user.interface';
+import { DeleteUserResponseDto } from './dto/deleted-user.dto';
+import { UserCreatedDto } from './dto/user-created.dto';
 
+@ApiTags('Users')
 @Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User has been created successfully',
+    type: UserCreatedDto,
+  })
   @Post()
   async create(@Res() response, @Body() createUserDto: CreateUserDto) {
     try {
@@ -34,6 +43,11 @@ export class UsersController {
   }
 
   @Get()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'All users data found succesfully',
+    type: Array<IUser>,
+  })
   async findAll(@Res() response) {
     try {
       const userData = await this.usersService.findAll();
@@ -47,6 +61,11 @@ export class UsersController {
   }
 
   @Get('/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User found successfully',
+    type: IUser,
+  })
   async findById(@Res() response, @Param('id') userId: string) {
     try {
       const existingUser = await this.usersService.findById(userId);
@@ -83,6 +102,11 @@ export class UsersController {
   }
 
   @Delete('/:id')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User deleted successfully',
+    type: DeleteUserResponseDto,
+  })
   async delete(@Res() response, @Param('id') userId: string) {
     try {
       const deletedUser = await this.usersService.deleteUserById(userId);

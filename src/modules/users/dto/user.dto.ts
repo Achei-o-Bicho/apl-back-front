@@ -1,12 +1,61 @@
-export class CreateUserDto {
-  document: string;
-  name: string;
-  contact: IContact;
-  password: string;
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
+
+export class ContactDto {
+  @ApiProperty({
+    type: String,
+    description: 'Email address of the user',
+    example: 'johndoe@example.com',
+  })
+  @IsNotEmpty()
+  emailAddress: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Area code of the user contact number',
+    example: '11',
+  })
+  @IsNotEmpty()
+  ddd: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Phone number of the user',
+    example: '987654321',
+  })
+  @IsNotEmpty()
+  phone: string;
 }
 
-export interface IContact {
-  emailAddress: string;
-  ddd: string;
-  phone: string;
+export class CreateUserDto {
+  @ApiProperty({
+    type: String,
+    description: 'Document of the user',
+    example: '12345678900',
+  })
+  @IsNotEmpty()
+  document: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Name of the user',
+    example: 'John Doe',
+  })
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty({
+    type: ContactDto,
+    description: 'Contact information of the user',
+  })
+  @IsNotEmpty()
+  contact: ContactDto;
+
+  @ApiProperty({
+    type: String,
+    description: 'Password for the user',
+    example: 'secretpassword',
+  })
+  @IsNotEmpty()
+  password: string;
 }
