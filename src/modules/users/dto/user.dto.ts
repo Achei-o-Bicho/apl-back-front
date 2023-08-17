@@ -12,16 +12,8 @@ export class ContactDto {
 
   @ApiProperty({
     type: String,
-    description: 'Area code of the user contact number',
-    example: '11',
-  })
-  @IsNotEmpty()
-  ddd: string;
-
-  @ApiProperty({
-    type: String,
     description: 'Phone number of the user',
-    example: '987654321',
+    example: '+5511987654321',
   })
   @IsNotEmpty()
   phone: string;
