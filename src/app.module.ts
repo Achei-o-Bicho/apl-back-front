@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerMiddleware } from './logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { SendMessageModule } from './modules/send-message/send-message.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from './modules/auth/auth.module';
     MongooseModule.forRoot(process.env.DB_URL),
     UsersModule,
     AuthModule,
+    SendMessageModule,
   ],
   controllers: [],
   providers: [],

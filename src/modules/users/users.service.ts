@@ -1,14 +1,19 @@
-import { Injectable, NotFoundException, Param, Res } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
 import { IUser } from './interface/user.interface';
 import { User } from './schema/user.schema';
 import { LoginDto } from './dto/login.dto';
+import { SendWhatsappService } from '../send-message/send-whatsapp.service';
+import { generateTokenOTP } from 'src/utils/token';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly sendMessageService: SendWhatsappService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<IUser> {
     const createdUser = new this.userModel(createUserDto);
@@ -70,5 +75,14 @@ export class UsersService {
     if (!user) throw new NotFoundException(`User ${emailAddress} not found`);
 
     return user;
+  }
+
+  async validateNumberUser(number: string): Promise<string> {
+    try {
+      const otpToken = generateTokenOTP(number);
+      await this.sendMessageService.sendSMS(number, otpToken);
+
+      return otpToken;
+    } catch (err) {}
   }
 }
