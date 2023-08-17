@@ -6,7 +6,10 @@ import { LoggerMiddleware } from './logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SendMessageModule } from './modules/send-message/send-message.module';
-import { AwsModule } from './modules/files/aws.module';
+import { AwsModule } from './modules/aws/aws.module';
+import { AwsSdkModule } from 'nest-aws-sdk';
+import { Credentials, S3 } from 'aws-sdk';
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
 
 @Module({
   imports: [
@@ -17,6 +20,17 @@ import { AwsModule } from './modules/files/aws.module';
     AuthModule,
     SendMessageModule,
     AwsModule,
+    AwsSdkModule.forRoot({
+      defaultServiceOptions: {
+        region: process.env.REGION_AWS,
+        credentials: new Credentials({
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          sessionToken: process.env.AWS_SESSION_TOKEN,
+        }),
+      },
+      services: [S3],
+    }),
   ],
   controllers: [],
   providers: [],

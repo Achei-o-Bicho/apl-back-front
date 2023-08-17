@@ -22,4 +22,18 @@ export class PetRepositoryService implements PetRepository {
   async removeById(petId: string): Promise<void> {
     await this.petModel.findByIdAndRemove(petId);
   }
+
+  async updateImageAnimal(
+    imageUrl: string,
+    petId: string,
+  ): Promise<Pet | null> {
+    const filter = { _id: petId };
+    const update = { $set: { image: imageUrl } };
+
+    const updatedPet = await this.petModel.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+
+    return updatedPet;
+  }
 }
