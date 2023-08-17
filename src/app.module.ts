@@ -9,7 +9,6 @@ import { SendMessageModule } from './modules/send-message/send-message.module';
 import { AwsModule } from './modules/aws/aws.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { Credentials, S3 } from 'aws-sdk';
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service';
 
 @Module({
   imports: [
