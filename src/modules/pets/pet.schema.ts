@@ -30,6 +30,9 @@ export class Pet {
 
   @Prop()
   pathImage: string;
+
+  @Prop()
+  description?: string;
 }
 
 export const PetSchema = SchemaFactory.createForClass(Pet);
