@@ -12,7 +12,7 @@ export class CreatePetDto {
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({ type: AnimalGender, example: 'Male' })
+  @ApiProperty({ enum: AnimalGender, example: AnimalGender.M })
   @IsNotEmpty()
   gender: AnimalGender;
 
@@ -41,9 +41,9 @@ export class CreatePetDto {
   zipCode: string;
 
   @ApiProperty({
-    type: TypePet,
+    enum: TypePet,
     description: 'Type of pet',
-    example: 'Cat',
+    example: TypePet.CAT,
   })
   @IsNotEmpty()
   type: TypePet;

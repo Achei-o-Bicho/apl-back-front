@@ -1,8 +1,8 @@
-import { IContact } from '../dto/user.dto';
+import { ContactDto } from '../dto/user.dto';
 
 export class IUser {
   document: string;
   name: string;
-  contact: IContact;
+  contact: ContactDto;
   password: string;
 }
