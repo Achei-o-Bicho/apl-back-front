@@ -22,7 +22,6 @@ export const maskedUser = (user: IUser) => {
     name: user.name.split(' ')[0],
     contact: {
       emailAddress: maskEmail(user.contact.emailAddress),
-      ddd: user.contact.ddd,
       phone: maskPhone(user.contact.phone),
     },
   };
