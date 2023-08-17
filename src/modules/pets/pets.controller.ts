@@ -8,11 +8,15 @@ import {
   Res,
   Delete,
   Logger,
+  UploadedFile,
+  Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
 import { CreatePetDto } from './dto/pet.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Pets')
 @Controller('pets')
@@ -88,6 +92,41 @@ export class PetsController {
     } catch (err) {
       this.logger.error(err);
       res.status(500);
+    }
+  }
+
+  @ApiOperation({ summary: 'Link images with the dog' })
+  @ApiResponse({ status: 200, description: 'Image linked successfully' })
+  @ApiResponse({ status: 404, description: 'Pet not found' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @UseInterceptors(FileInterceptor('image'))
+  @Post(':idPet/:idUser/save-image')
+  public async linkImagePet(
+    @Param('idPet') idPet: string,
+    @Param('idUser') idUser: string,
+    @UploadedFile() image: Express.Multer.File,
+    @Res() res: Response,
+  ) {
+    try {
+      const petUpdated = await this.petService.saveImagePet(
+        image,
+        idPet,
+        idUser,
+      );
+
+      if (!petUpdated) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'Pet not found' });
+      }
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Image linked successfully', pet: petUpdated });
+    } catch (err) {
+      return res
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .json({ message: 'Internal Server Error' });
     }
   }
 }
