@@ -47,4 +47,6 @@ export class CreatePetDto {
   })
   @IsNotEmpty()
   type: TypePet;
+
+  description?: string;
 }
