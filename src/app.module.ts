@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SendMessageModule } from './modules/send-message/send-message.module';
+import { AwsModule } from './modules/files/aws.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SendMessageModule } from './modules/send-message/send-message.module';
     UsersModule,
     AuthModule,
     SendMessageModule,
+    AwsModule,
   ],
   controllers: [],
   providers: [],
