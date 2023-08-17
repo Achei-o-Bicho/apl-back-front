@@ -15,6 +15,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IUser } from './interface/user.interface';
 import { DeleteUserResponseDto } from './dto/deleted-user.dto';
 import { UserCreatedDto } from './dto/user-created.dto';
+import { SendWhatsappService } from '../send-message/send-whatsapp.service';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -117,5 +118,23 @@ export class UsersController {
     } catch (err) {
       return response.status(err.status).json(err.response);
     }
+  }
+
+  @Post('validate-number')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'ValidateNumber',
+  })
+  async validateNumberUser(
+    @Res() response,
+    @Body() validateNumberDto: { number: string },
+  ) {
+    const validateNumber = await this.usersService.validateNumberUser(
+      validateNumberDto.number,
+    );
+
+    response.status(HttpStatus.OK).json({
+      tokenOtp: validateNumber,
+    });
   }
 }
