@@ -33,6 +33,9 @@ export class Pet {
 
   @Prop()
   description?: string;
+
+  @Prop()
+  image: string;
 }
 
 export const PetSchema = SchemaFactory.createForClass(Pet);
