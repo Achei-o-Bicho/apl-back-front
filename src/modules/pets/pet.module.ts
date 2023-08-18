@@ -7,11 +7,13 @@ import { PetRepository } from './repositories/pet.repository';
 import { PetRepositoryService } from './repositories/pet.repository.service';
 import { AwsModule } from '../aws/aws.module';
 import { UsersModule } from '../users/users.module';
+import { CompressImagesModule } from '../compress-images/compress.module';
 
 @Module({
   imports: [
     UsersModule,
     AwsModule,
+    CompressImagesModule,
     MongooseModule.forFeature([
       { name: Pet.name, schema: PetSchema, collection: 'COLLECTION_PET' },
     ]),
