@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AnimalGender } from '../enum/animalGender.enum';
 import { TypePet } from '../enum/typePet.enum';
 import { IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreatePetDto {
   @ApiProperty({
@@ -24,22 +25,30 @@ export class CreatePetDto {
   @IsNotEmpty()
   breed: string;
 
-  @ApiProperty({
-    type: String,
-    description: 'Borough where the pet is located',
-    example: 'Consolação',
-  })
-  @IsNotEmpty()
-  borough: string;
+  // @ApiProperty({
+  //   type: String,
+  //   description: 'Borough where the pet is located',
+  //   example: 'Consolação',
+  // })
+  // @IsNotEmpty()
+  // borough: string;
+
+  // @ApiProperty({
+  //   type: String,
+  //   description: 'ZipCode where the pet is located',
+  //   example: '01414-001',
+  // })
+  // @IsNotEmpty()
+  // zipCode: string;
 
   @ApiProperty({
-    type: String,
-    description: 'ZipCode where the pet is located',
-    example: '01414-001',
+    description: 'Birthday of pet',
+    example: '25/07/2022',
   })
-  @IsNotEmpty()
-  zipCode: string;
+  @Transform(({ value }) => new Date(value), { toClassOnly: true }) // Transforma a string em Date
+  birthday: Date;
 
+  @IsNotEmpty()
   @ApiProperty({
     enum: TypePet,
     description: 'Type of pet',
