@@ -4,6 +4,7 @@ import { CreatePetDto } from './dto/pet.dto';
 import { PetRepository } from './repositories/pet.repository';
 import { AwsService } from '../aws/aws.service';
 import { UsersService } from '../users/users.service';
+import { Base64CompressionService } from '../compress-images/compress.service';
 
 @Injectable()
 export class PetsService {
@@ -11,6 +12,7 @@ export class PetsService {
     private readonly petRepository: PetRepository,
     private readonly awsService: AwsService,
     private readonly usersService: UsersService,
+    private readonly compressImage: Base64CompressionService,
   ) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
@@ -64,9 +66,12 @@ export class PetsService {
 
     const imageBufferBase64 = buffer.toString('base64');
 
-    await this.updateFieldImageInPet(url, petId, imageBufferBase64);
+    const compressedBase64 =
+      this.compressImage.compressBase64(imageBufferBase64);
 
-    return { url: url, image: imageBufferBase64 };
+    await this.updateFieldImageInPet(url, petId, compressedBase64);
+
+    return { url: url, image: compressedBase64 };
   }
 
   async getImagesFromPet(petId: string) {
