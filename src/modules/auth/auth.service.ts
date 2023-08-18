@@ -35,6 +35,7 @@ export class AuthService {
       const payload = maskedUser(user);
       return {
         accessToken: this.jwtService.sign(payload),
+        userId: user._id,
       };
     } catch (err) {
       this.logger.error(err);
