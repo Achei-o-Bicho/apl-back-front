@@ -20,10 +20,7 @@ export class Pet {
   breed: string;
 
   @Prop({ required: true })
-  borough: string;
-
-  @Prop({ required: true })
-  zipCode: string;
+  birthday: Date;
 
   @Prop({ enum: TypePet })
   type: TypePet;

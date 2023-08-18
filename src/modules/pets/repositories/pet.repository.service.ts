@@ -14,7 +14,10 @@ export class PetRepositoryService implements PetRepository {
   ) {}
 
   async create(createPet: CreatePetDto): Promise<Pet> {
-    const createdPet = new this.petModel(createPet);
+    const dateBirthday = new Date(createPet.birthday);
+    const createdPet = new this.petModel(createPet, {
+      birthday: dateBirthday,
+    });
     const pet = await createdPet.save();
     await this.usersService.addPetToUser(pet, createPet.userId);
     return pet;
