@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { ContactDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
@@ -22,8 +22,8 @@ export class User extends Document {
   @Prop()
   password: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Pet', required: false })
-  pet: Pet;
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] }) // Referência ao modelo Pet
+  pets: Types.Array<Pet>;
 
   async comparePassword(attempt: string): Promise<boolean> {
     return await bcrypt.compare(attempt, this.password);

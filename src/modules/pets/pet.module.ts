@@ -6,9 +6,11 @@ import { PetsService } from './pet.service';
 import { PetRepository } from './repositories/pet.repository';
 import { PetRepositoryService } from './repositories/pet.repository.service';
 import { AwsModule } from '../aws/aws.module';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     AwsModule,
     MongooseModule.forFeature([
       { name: Pet.name, schema: PetSchema, collection: 'COLLECTION_PET' },

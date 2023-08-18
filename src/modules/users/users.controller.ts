@@ -137,4 +137,11 @@ export class UsersController {
       tokenOtp: validateNumber,
     });
   }
+
+  @Get('pets/:idUser')
+  async getPetsOfUser(@Res() res, @Param('idUser') user: string) {
+    const pets = await this.usersService.getPetsOfUser(user);
+
+    res.status(HttpStatus.OK).json(pets);
+  }
 }

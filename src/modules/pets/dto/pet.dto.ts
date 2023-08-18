@@ -49,4 +49,6 @@ export class CreatePetDto {
   type: TypePet;
 
   description?: string;
+
+  userId: string;
 }

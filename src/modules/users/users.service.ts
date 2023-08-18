@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CreateUserDto } from './dto/user.dto';
 import { IUser } from './interface/user.interface';
 import { User } from './schema/user.schema';
 import { LoginDto } from './dto/login.dto';
 import { SendWhatsappService } from '../send-message/send-whatsapp.service';
 import { generateTokenOTP } from 'src/utils/token';
+import { Pet } from '../pets/pet.schema';
 
 @Injectable()
 export class UsersService {
@@ -84,5 +85,30 @@ export class UsersService {
 
       return otpToken;
     } catch (err) {}
+  }
+
+  async addPetToUser(pet: Pet, userId: string) {
+    const filter = { _id: userId };
+    const update = { $push: { pets: pet } };
+
+    const updatedUser = await this.userModel.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+
+    return updatedUser;
+  }
+
+  async getPetsOfUser(userId: string) {
+    const ownerWithPets = await this.userModel
+      .findById(userId)
+      .populate('pets');
+    return ownerWithPets;
+  }
+
+  async findUserByPetId(petId: string) {
+    const user = await this.userModel
+      .findOne({ pets: new mongoose.Types.ObjectId(petId)._id })
+      .exec();
+    return user;
   }
 }
