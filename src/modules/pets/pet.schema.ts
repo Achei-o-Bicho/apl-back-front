@@ -16,13 +16,13 @@ export class Pet {
   @Prop({ enum: AnimalGender, required: true })
   gender: AnimalGender;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   breed: string;
 
   @Prop({ required: true })
   birthday: Date;
 
-  @Prop({ enum: TypePet })
+  @Prop({ enum: TypePet, required: false })
   type: TypePet;
 
   @Prop()
