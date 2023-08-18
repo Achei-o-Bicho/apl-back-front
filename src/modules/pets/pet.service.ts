@@ -3,12 +3,14 @@ import { Pet } from './pet.schema';
 import { CreatePetDto } from './dto/pet.dto';
 import { PetRepository } from './repositories/pet.repository';
 import { AwsService } from '../aws/aws.service';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PetsService {
   constructor(
     private readonly petRepository: PetRepository,
     private readonly awsService: AwsService,
+    private readonly usersService: UsersService,
   ) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
@@ -37,14 +39,16 @@ export class PetsService {
     return pet;
   }
 
-  async saveImagePet(
-    image: Express.Multer.File,
-    petId: string,
-    userId: string,
-  ) {
+  async saveImagePet(image: Express.Multer.File, petId: string) {
     const { buffer, originalname, mimetype } = image;
 
-    const formatFileName = `users/${userId}/${petId}/${originalname}`;
+    const user = await this.usersService.findUserByPetId(petId);
+
+    if (!user) {
+      throw new NotFoundException(`User not found in pet`);
+    }
+
+    const formatFileName = `users/${user._id}/${petId}/${originalname}`;
 
     const result = await this.awsService.uploadFile(
       buffer,

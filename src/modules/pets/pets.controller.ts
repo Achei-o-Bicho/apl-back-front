@@ -100,19 +100,14 @@ export class PetsController {
   @ApiResponse({ status: 404, description: 'Pet not found' })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @UseInterceptors(FileInterceptor('image'))
-  @Post(':idPet/:idUser/save-image')
+  @Post(':idPet/save-image')
   public async linkImagePet(
     @Param('idPet') idPet: string,
-    @Param('idUser') idUser: string,
     @UploadedFile() image: Express.Multer.File,
     @Res() res: Response,
   ) {
     try {
-      const petUpdated = await this.petService.saveImagePet(
-        image,
-        idPet,
-        idUser,
-      );
+      const petUpdated = await this.petService.saveImagePet(image, idPet);
 
       if (!petUpdated) {
         return res
