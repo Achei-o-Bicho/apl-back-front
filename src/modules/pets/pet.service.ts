@@ -68,4 +68,10 @@ export class PetsService {
 
     return { url: url, image: imageBufferBase64 };
   }
+
+  async getImagesFromPet(petId: string) {
+    const imagesFromPet = await this.petRepository.getImagesFromPetById(petId);
+
+    return { images: imagesFromPet };
+  }
 }
