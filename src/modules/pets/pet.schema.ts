@@ -1,9 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { AnimalGender } from './enum/animalGender.enum';
 import { TypePet } from './enum/typePet.enum';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 import * as autoIncrement from 'mongoose-plugin-autoinc';
+
+export class ImagesPet {
+  @Prop({ required: false })
+  location: string;
+
+  @Prop({ required: false })
+  base64: string;
+}
 
 @Schema()
 export class Pet {
@@ -31,8 +39,11 @@ export class Pet {
   @Prop()
   description?: string;
 
-  @Prop()
-  image: string;
+  @Prop({
+    type: [{ type: Object, ref: 'Pet' }],
+    required: false,
+  })
+  images: Types.Array<ImagesPet>;
 }
 
 export const PetSchema = SchemaFactory.createForClass(Pet);

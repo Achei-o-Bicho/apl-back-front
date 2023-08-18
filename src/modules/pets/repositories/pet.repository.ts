@@ -6,5 +6,12 @@ export abstract class PetRepository {
   abstract findAll(): Promise<Pet[]>;
   abstract findAllById(petId: string): Promise<Pet>;
   abstract removeById(petId: string): Promise<void>;
-  abstract updateImageAnimal(imageUrl: string, petId: string): Promise<Pet>;
+  abstract getImagesFromPetById(
+    petId: string,
+  ): Promise<{ location: string; image: string }[]>;
+  abstract updateImageAnimal(
+    imageUrl: string,
+    petId: string,
+    base64: string,
+  ): Promise<Pet>;
 }

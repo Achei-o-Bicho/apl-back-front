@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePetDto } from '../dto/pet.dto';
 import { Pet } from '../pet.schema';
 import { PetRepository } from './pet.repository';
@@ -35,14 +35,34 @@ export class PetRepositoryService implements PetRepository {
   async updateImageAnimal(
     imageUrl: string,
     petId: string,
+    base64: string,
   ): Promise<Pet | null> {
     const filter = { _id: petId };
-    const update = { $set: { image: imageUrl } };
+    const update = {
+      $push: { images: { location: imageUrl, base64: base64 } },
+    };
 
     const updatedPet = await this.petModel.findOneAndUpdate(filter, update, {
       new: true,
     });
 
     return updatedPet;
+  }
+
+  async getImagesFromPetById(
+    petId: string,
+  ): Promise<{ location: string; image: string }[]> {
+    const pet = await this.petModel.findById(petId).exec();
+
+    if (!pet) {
+      throw new NotFoundException('Pet not found');
+    }
+
+    const images = pet.images.map((image) => ({
+      location: image.location,
+      image: image.base64,
+    }));
+
+    return images;
   }
 }

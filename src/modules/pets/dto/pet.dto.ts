@@ -22,7 +22,6 @@ export class CreatePetDto {
     description: 'Breed of animal',
     example: 'Husky',
   })
-  @IsNotEmpty()
   breed: string;
 
   @ApiProperty({
@@ -32,13 +31,11 @@ export class CreatePetDto {
   @Transform(({ value }) => new Date(value), { toClassOnly: true }) // Transforma a string em Date
   birthday: Date;
 
-  @IsNotEmpty()
   @ApiProperty({
     enum: TypePet,
     description: 'Type of pet',
     example: TypePet.CAT,
   })
-  @IsNotEmpty()
   type: TypePet;
 
   description?: string;

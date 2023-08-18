@@ -91,7 +91,26 @@ export class PetsController {
       res.status(HttpStatus.NO_CONTENT);
     } catch (err) {
       this.logger.error(err);
-      res.status(500);
+      res.status(500).json();
+    }
+  }
+
+  @ApiOperation({ summary: 'Get all images from pet id' })
+  @ApiResponse({ status: 200, description: 'Images' })
+  @Post('images')
+  public async getAllImagesFromPetById(
+    @Res() res,
+    @Body() getImages: { idPet: string },
+  ) {
+    try {
+      const imagesFromPet = await this.petService.getImagesFromPet(
+        getImages.idPet,
+      );
+
+      res.status(HttpStatus.OK).json(imagesFromPet);
+    } catch (err) {
+      this.logger.error(err);
+      res.status(500).json();
     }
   }
 
