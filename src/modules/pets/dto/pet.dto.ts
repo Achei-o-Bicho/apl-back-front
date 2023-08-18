@@ -25,22 +25,6 @@ export class CreatePetDto {
   @IsNotEmpty()
   breed: string;
 
-  // @ApiProperty({
-  //   type: String,
-  //   description: 'Borough where the pet is located',
-  //   example: 'Consolação',
-  // })
-  // @IsNotEmpty()
-  // borough: string;
-
-  // @ApiProperty({
-  //   type: String,
-  //   description: 'ZipCode where the pet is located',
-  //   example: '01414-001',
-  // })
-  // @IsNotEmpty()
-  // zipCode: string;
-
   @ApiProperty({
     description: 'Birthday of pet',
     example: '25/07/2022',

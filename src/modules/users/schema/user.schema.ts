@@ -20,9 +20,18 @@ export class User extends Document {
   contact: ContactDto;
 
   @Prop()
+  borough: string;
+
+  @Prop()
+  zipCode: string;
+
+  @Prop()
   password: string;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }] }) // Referência ao modelo Pet
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pet' }],
+    required: false,
+  })
   pets: Types.Array<Pet>;
 
   async comparePassword(attempt: string): Promise<boolean> {
