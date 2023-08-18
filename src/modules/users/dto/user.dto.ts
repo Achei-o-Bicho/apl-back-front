@@ -56,7 +56,6 @@ export class CreateUserDto {
     description: 'Borough where the pet is located',
     example: 'Consolação',
   })
-  @IsNotEmpty()
   borough: string;
 
   @ApiProperty({
