@@ -40,10 +40,10 @@ export class Pet {
   description?: string;
 
   @Prop({
-    type: [{ type: ImagesPet, ref: 'Pet' }],
+    type: [{ type: Object, ref: 'Pet' }],
     required: false,
   })
-  pets: Types.Array<Pet>;
+  images: Types.Array<ImagesPet>;
 }
 
 export const PetSchema = SchemaFactory.createForClass(Pet);
