@@ -18,6 +18,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<IUser> {
     const createdUser = new this.userModel(createUserDto);
+    if (await this.userExists(createUserDto.contact.emailAddress)) return null;
     return createdUser.save();
   }
 
@@ -110,5 +111,15 @@ export class UsersService {
       .findOne({ pets: new mongoose.Types.ObjectId(petId)._id })
       .exec();
     return user;
+  }
+
+  async userExists(userEmail: string): Promise<boolean> {
+    const user = await this.findByEmailAddress(userEmail);
+
+    if (user) {
+      return true;
+    }
+
+    return false;
   }
 }

@@ -35,6 +35,15 @@ export class UsersController {
   async create(@Res() response, @Body() createUserDto: CreateUserDto) {
     try {
       const newUser = await this.usersService.create(createUserDto);
+
+      if (!newUser) {
+        const message = 'User already exists';
+        this.logger.debug(message);
+        return response.status(412).json({
+          message: message,
+        });
+      }
+
       return response.status(HttpStatus.CREATED).json({
         message: 'User has been created successfully',
         newUser,
