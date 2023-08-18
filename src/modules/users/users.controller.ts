@@ -8,6 +8,8 @@ import {
   Res,
   Body,
   HttpStatus,
+  Logger,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
@@ -20,6 +22,8 @@ import { SendWhatsappService } from '../send-message/send-whatsapp.service';
 @ApiTags('Users')
 @Controller('/users')
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
+
   constructor(private readonly usersService: UsersService) {}
 
   @ApiResponse({
@@ -36,10 +40,13 @@ export class UsersController {
         newUser,
       });
     } catch (err) {
-      return response.status(err.status).json({
-        message: 'Error user not created',
-        error: err.response,
-      });
+      this.logger.error(err);
+      throw new InternalServerErrorException();
+      // throw new
+      // return response.status(err.status).json({
+      //   message: 'Error user not created',
+      //   error: err.response,
+      // });
     }
   }
 

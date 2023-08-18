@@ -5,4 +5,6 @@ export class IUser {
   name: string;
   contact: ContactDto;
   password: string;
+  borough: string;
+  zipCode: string;
 }

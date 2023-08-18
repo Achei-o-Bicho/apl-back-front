@@ -50,4 +50,20 @@ export class CreateUserDto {
   })
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'Borough where the pet is located',
+    example: 'Consolação',
+  })
+  @IsNotEmpty()
+  borough: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'ZipCode where the pet is located',
+    example: '01414-001',
+  })
+  @IsNotEmpty()
+  zipCode: string;
 }
