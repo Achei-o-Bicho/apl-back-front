@@ -35,9 +35,10 @@ export class PetRepositoryService implements PetRepository {
   async updateImageAnimal(
     imageUrl: string,
     petId: string,
+    base64: string,
   ): Promise<Pet | null> {
     const filter = { _id: petId };
-    const update = { $set: { image: imageUrl } };
+    const update = { $push: { images: { image: imageUrl, base64: base64 } } };
 
     const updatedPet = await this.petModel.findOneAndUpdate(filter, update, {
       new: true,

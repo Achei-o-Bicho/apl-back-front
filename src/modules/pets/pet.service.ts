@@ -33,8 +33,12 @@ export class PetsService {
     return this.petRepository.removeById(petId);
   }
 
-  private async updateFieldImageInPet(imageUrl: string, petId: string) {
-    const pet = this.petRepository.updateImageAnimal(imageUrl, petId);
+  private async updateFieldImageInPet(
+    imageUrl: string,
+    petId: string,
+    base64: string,
+  ) {
+    const pet = this.petRepository.updateImageAnimal(imageUrl, petId, base64);
     if (!pet) throw new NotFoundException(`Pet ${petId} not found`);
     return pet;
   }
@@ -58,8 +62,10 @@ export class PetsService {
 
     const url = result.Location;
 
-    await this.updateFieldImageInPet(url, petId);
+    const imageBufferBase64 = buffer.toString('base64');
 
-    return { url: url };
+    await this.updateFieldImageInPet(url, petId, imageBufferBase64);
+
+    return { url: url, image: imageBufferBase64 };
   }
 }
