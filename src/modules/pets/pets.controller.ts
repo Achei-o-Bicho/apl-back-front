@@ -11,12 +11,14 @@ import {
   UploadedFile,
   Query,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
 import { CreatePetDto } from './dto/pet.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Pets')
 @Controller('pets')
@@ -25,6 +27,7 @@ export class PetsController {
 
   constructor(private petService: PetsService) {}
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get a pet by ID' })
   @ApiResponse({ status: 200, description: 'Pet found', type: CreatePetDto })
   @ApiResponse({ status: 404, description: 'Pet not found' })
@@ -42,6 +45,7 @@ export class PetsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get all pets' })
   @ApiResponse({
     status: 200,
@@ -81,6 +85,7 @@ export class PetsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Delete a pet by ID' })
   @ApiResponse({ status: 204, description: 'Pet deleted successfully' })
   @Delete(':id')
@@ -95,6 +100,7 @@ export class PetsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get all images from pet id' })
   @ApiResponse({ status: 200, description: 'Images' })
   @Post('images')
@@ -114,6 +120,7 @@ export class PetsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Link images with the dog' })
   @ApiResponse({ status: 200, description: 'Image linked successfully' })
   @ApiResponse({ status: 404, description: 'Pet not found' })

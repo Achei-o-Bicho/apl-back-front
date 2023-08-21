@@ -9,9 +9,11 @@ import { AwsModule } from '../aws/aws.module';
 import { UsersModule } from '../users/users.module';
 import { CompressImagesModule } from '../compress-images/compress.module';
 import { ResizeImageModule } from '../resize-image/resize-image.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
+    JwtModule,
     UsersModule,
     AwsModule,
     ResizeImageModule,

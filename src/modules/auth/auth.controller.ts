@@ -4,9 +4,9 @@ import {
   Res,
   Body,
   HttpStatus,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { ApiResponse, ApiOperation, ApiTags } from '@nestjs/swagger'; // Importe as anotações do Swagger
+import { ApiResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../users/dto/login.dto';
 
@@ -26,7 +26,7 @@ export class AuthController {
     const { email, password } = login;
     const user = await this.authService.validateUser(email, password);
     if (!user) {
-      throw new NotFoundException();
+      throw new UnauthorizedException('User or password is invalid.');
     }
 
     const userLogged = await this.authService.login(user);
