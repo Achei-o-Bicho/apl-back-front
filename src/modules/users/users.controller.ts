@@ -11,6 +11,7 @@ import {
   Logger,
   InternalServerErrorException,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
@@ -18,8 +19,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IUser } from './interface/user.interface';
 import { DeleteUserResponseDto } from './dto/deleted-user.dto';
 import { UserCreatedDto } from './dto/user-created.dto';
-import { SendWhatsappService } from '../send-message/send-whatsapp.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { maskedUser } from 'src/utils/mask.utils';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -66,9 +67,14 @@ export class UsersController {
   async findAll(@Res() response) {
     try {
       const userData = await this.usersService.findAll();
+
+      const usersMasked: Partial<IUser>[] = userData.map((user) =>
+        maskedUser(user),
+      );
+
       return response.status(HttpStatus.OK).json({
         message: 'All users data found successfully',
-        userData,
+        users: usersMasked,
       });
     } catch (err) {
       return response.status(err.status).json(err.response);
@@ -85,9 +91,12 @@ export class UsersController {
   async findById(@Res() response, @Param('id') userId: string) {
     try {
       const existingUser = await this.usersService.findById(userId);
+
+      const userMasked = maskedUser(existingUser);
+
       return response.status(HttpStatus.OK).json({
         message: 'User found successfully',
-        existingUser,
+        user: userMasked,
       });
     } catch (err) {
       return response.status(err.status).json({
@@ -160,6 +169,8 @@ export class UsersController {
   @Get('pets/:idUser')
   async getPetsOfUser(@Res() res, @Param('idUser') user: string) {
     const pets = await this.usersService.getPetsOfUser(user);
+
+    if (!pets) throw new NotFoundException();
 
     res.status(HttpStatus.OK).json(pets);
   }
