@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Logger,
   InternalServerErrorException,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/user.dto';
 import { UsersService } from './users.service';
@@ -18,6 +19,7 @@ import { IUser } from './interface/user.interface';
 import { DeleteUserResponseDto } from './dto/deleted-user.dto';
 import { UserCreatedDto } from './dto/user-created.dto';
 import { SendWhatsappService } from '../send-message/send-whatsapp.service';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Users')
 @Controller('/users')
@@ -51,14 +53,10 @@ export class UsersController {
     } catch (err) {
       this.logger.error(err);
       throw new InternalServerErrorException();
-      // throw new
-      // return response.status(err.status).json({
-      //   message: 'Error user not created',
-      //   error: err.response,
-      // });
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -77,6 +75,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Get('/:id')
   @ApiResponse({
     status: HttpStatus.OK,
@@ -98,6 +97,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Put('/:id')
   async update(
     @Res() response,
@@ -118,6 +118,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete('/:id')
   @ApiResponse({
     status: HttpStatus.OK,
@@ -136,6 +137,7 @@ export class UsersController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post('validate-number')
   @ApiResponse({
     status: HttpStatus.OK,
@@ -154,6 +156,7 @@ export class UsersController {
     });
   }
 
+  @UseGuards(AuthGuard)
   @Get('pets/:idUser')
   async getPetsOfUser(@Res() res, @Param('idUser') user: string) {
     const pets = await this.usersService.getPetsOfUser(user);
