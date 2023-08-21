@@ -24,5 +24,8 @@ export const maskedUser = (user: IUser) => {
       emailAddress: maskEmail(user.contact.emailAddress),
       phone: maskPhone(user.contact.phone),
     },
+    zipCode: user.zipCode,
+    borough: user.borough,
+    pets: user.pets,
   };
 };
