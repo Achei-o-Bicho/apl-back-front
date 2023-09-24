@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import * as brotli from 'brotli';
+import { Injectable, Logger } from "@nestjs/common";
+import * as brotli from "brotli";
 
 @Injectable()
 export class Base64CompressionService {
@@ -11,8 +11,7 @@ export class Base64CompressionService {
       const compressedBuffer = brotli.compress(buffer);
 
       if (compressedBuffer) {
-        const compressedBase64 = compressedBuffer.toString('base64');
-        return compressedBase64;
+        return compressedBuffer.toString('base64');
       } else {
         this.logger.error('Compression failed');
         return base64String;

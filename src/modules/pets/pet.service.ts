@@ -4,8 +4,8 @@ import { CreatePetDto } from './dto/pet.dto';
 import { PetRepository } from './repositories/pet.repository';
 import { AwsService } from '../aws/aws.service';
 import { UsersService } from '../users/users.service';
-import { Base64CompressionService } from '../compress-images/compress.service';
 import { ImageResizeService } from '../resize-image/resize-image.service';
+import { LambdaService } from '../lambda/lambda.service';
 
 @Injectable()
 export class PetsService {
@@ -13,8 +13,8 @@ export class PetsService {
     private readonly petRepository: PetRepository,
     private readonly awsService: AwsService,
     private readonly usersService: UsersService,
-    private readonly compressImage: Base64CompressionService,
     private readonly imageResizeService: ImageResizeService,
+    private readonly lambdaService: LambdaService,
   ) {}
 
   async create(createPetDto: CreatePetDto): Promise<Pet> {
@@ -58,13 +58,13 @@ export class PetsService {
 
     const formatFileName = `users/${user._id}/${petId}/${originalname}`;
 
-    const result = await this.awsService.uploadFile(
+    const result = await this.lambdaService.sendImageToGoogleFunction(
       buffer,
       formatFileName,
       mimetype,
     );
 
-    const url = result.Location;
+    const url = result.location;
 
     const imageResized = await this.imageResizeService.resizeImage(buffer);
 
