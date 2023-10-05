@@ -1,0 +1,22 @@
+version: '3'
+services:
+  apl-back-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - minha-rede
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo:/data/db
+    networks:
+      - minha-rede 
+
+networks:
+  minha-rede:

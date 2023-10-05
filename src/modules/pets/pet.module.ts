@@ -7,7 +7,6 @@ import { PetRepository } from './repositories/pet.repository';
 import { PetRepositoryService } from './repositories/pet.repository.service';
 import { AwsModule } from '../aws/aws.module';
 import { UsersModule } from '../users/users.module';
-import { CompressImagesModule } from '../compress-images/compress.module';
 import { ResizeImageModule } from '../resize-image/resize-image.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LambdaModule } from '../lambda/lambda.module';
@@ -18,7 +17,6 @@ import { LambdaModule } from '../lambda/lambda.module';
     UsersModule,
     AwsModule,
     ResizeImageModule,
-    CompressImagesModule,
     LambdaModule,
     MongooseModule.forFeature([
       { name: Pet.name, schema: PetSchema, collection: 'COLLECTION_PET' },

@@ -9,7 +9,6 @@ import { SendMessageModule } from './modules/send-message/send-message.module';
 import { AwsModule } from './modules/aws/aws.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { Credentials, S3 } from 'aws-sdk';
-import { CompressImagesModule } from './modules/compress-images/compress.module';
 import { ResizeImageModule } from './modules/resize-image/resize-image.module';
 
 @Module({
@@ -21,7 +20,6 @@ import { ResizeImageModule } from './modules/resize-image/resize-image.module';
     AuthModule,
     SendMessageModule,
     ResizeImageModule,
-    CompressImagesModule,
     AwsModule,
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
