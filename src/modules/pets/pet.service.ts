@@ -73,6 +73,34 @@ export class PetsService {
     return { url: url, image: imageBufferBase64 };
   }
 
+  async saveImagePetDirectoryOnly(image: Express.Multer.File, petId: string) {
+    const { buffer, originalname, mimetype } = image;
+
+    const user = await this.usersService.findUserByPetId(petId);
+
+    if (!user) {
+      throw new NotFoundException(`User not found in pet`);
+    }
+
+    const formatFileName = `pets/${petId}/${originalname}`;
+
+    const result = await this.lambdaService.sendImageToGoogleFunction(
+      buffer,
+      formatFileName,
+      mimetype,
+    );
+
+    const url = result.location;
+
+    const imageResized = await this.imageResizeService.resizeImage(buffer);
+
+    const imageBufferBase64 = imageResized.toString('base64');
+
+    await this.updateFieldImageInPet(url, petId, imageBufferBase64);
+
+    return { url: url, image: imageBufferBase64 };
+  }
+
   async getImagesFromPet(petId: string) {
     const imagesFromPet = await this.petRepository.getImagesFromPetById(petId);
 
