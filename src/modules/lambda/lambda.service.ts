@@ -29,6 +29,7 @@ export class LambdaService {
       };
 
       this.logger.log('Sending data to cloud function');
+
       const response = await this.httpService
         .post(url, data, config)
         .toPromise();
