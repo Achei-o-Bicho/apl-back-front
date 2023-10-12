@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { LambdaService } from '../lambda/lambda.service';
 import { gerarEndToEnd } from 'src/utils/endToEnd';
 import { RecognizePetDto } from './dto/recognize-pet.dto';
+import { ImageResizeService } from '../resize-image/resize-image.service';
 
 @Injectable()
 export class RecognizePetService {
@@ -12,6 +13,7 @@ export class RecognizePetService {
     @InjectModel(RecognizePet.name)
     private recognizePetModel: Model<RecognizePet>,
     private readonly lambdaService: LambdaService,
+    private readonly imageResizeService: ImageResizeService,
   ) {}
 
   async recognize(image: Express.Multer.File) {
@@ -21,8 +23,12 @@ export class RecognizePetService {
 
     const formatFileName = `recognator/${endToEnd}/${originalname}`;
 
+    const imageResized = await this.imageResizeService.resizeImage(buffer);
+
+    const imageBufferBase64 = imageResized.toString('base64');
+
     const result = await this.lambdaService.sendImageToGoogleFunction(
-      buffer,
+      imageBufferBase64,
       formatFileName,
       mimetype,
     );
