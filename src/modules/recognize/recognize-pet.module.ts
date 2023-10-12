@@ -8,11 +8,13 @@ import { RecognizePetController } from './recognize-pet.controller';
 import { RecognizePetService } from './recognize-pet.service';
 import { LambdaModule } from '../lambda/lambda.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ResizeImageModule } from '../resize-image/resize-image.module';
 
 @Module({
   imports: [
     JwtModule,
     LambdaModule,
+    ResizeImageModule,
     MongooseModule.forFeature([
       {
         name: RecognizePet.name,
