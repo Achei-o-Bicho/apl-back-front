@@ -8,7 +8,7 @@ export class LambdaService {
   constructor(private httpService: HttpService) {}
 
   async sendImageToGoogleFunction(
-    fileBuffer: Buffer,
+    fileBuffer: Buffer | string,
     fileName: string,
     contentType: string,
   ): Promise<ISaveImageGoogleCloudFunction> {
