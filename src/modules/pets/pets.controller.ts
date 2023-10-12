@@ -135,6 +135,8 @@ export class PetsController {
     try {
       const petUpdated = await this.petService.saveImagePet(image, idPet);
 
+      await this.petService.saveImagePetDirectoryOnly(image, idPet);
+
       if (!petUpdated) {
         return res
           .status(HttpStatus.NOT_FOUND)
