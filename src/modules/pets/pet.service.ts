@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Pet } from './pet.schema';
 import { CreatePetDto } from './dto/pet.dto';
 import { PetRepository } from './repositories/pet.repository';
-import { AwsService } from '../aws/aws.service';
 import { UsersService } from '../users/users.service';
 import { ImageResizeService } from '../resize-image/resize-image.service';
 import { LambdaService } from '../lambda/lambda.service';
@@ -11,7 +10,6 @@ import { LambdaService } from '../lambda/lambda.service';
 export class PetsService {
   constructor(
     private readonly petRepository: PetRepository,
-    private readonly awsService: AwsService,
     private readonly usersService: UsersService,
     private readonly imageResizeService: ImageResizeService,
     private readonly lambdaService: LambdaService,

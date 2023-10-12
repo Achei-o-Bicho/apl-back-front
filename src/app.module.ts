@@ -10,6 +10,8 @@ import { AwsModule } from './modules/aws/aws.module';
 import { AwsSdkModule } from 'nest-aws-sdk';
 import { Credentials, S3 } from 'aws-sdk';
 import { ResizeImageModule } from './modules/resize-image/resize-image.module';
+import { RecognizePeModule } from './modules/recognize/recognize-pet.module';
+import { LambdaModule } from './modules/lambda/lambda.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { ResizeImageModule } from './modules/resize-image/resize-image.module';
     AuthModule,
     SendMessageModule,
     ResizeImageModule,
+    RecognizePeModule,
     AwsModule,
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
