@@ -42,6 +42,7 @@ export class RecognizePetController {
       });
     } catch (err) {
       this.logger.error(err);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -54,16 +55,26 @@ export class RecognizePetController {
     @Res() res: Response,
   ) {
     try {
-      const { endToEnd, resultRecognator, url } =
-        await this.recognizeService.getStatusRecognizer(endToEndParam);
+      const recognize = await this.recognizeService.getStatusRecognizer(
+        endToEndParam,
+      );
 
-      res.status(HttpStatus.OK).json({
+      if (!recognize || recognize == null) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'EndToEnd not found' });
+      }
+
+      const { endToEnd, resultRecognator, url } = recognize;
+
+      return res.status(HttpStatus.OK).json({
         endToEnd,
         resultRecognator,
         url,
       });
     } catch (err) {
       this.logger.error(err);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

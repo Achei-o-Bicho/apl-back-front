@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RecognizePet } from './schema/recognize-pet.schema';
 import { Model } from 'mongoose';
@@ -52,6 +52,7 @@ export class RecognizePetService {
 
   async getStatusRecognizer(endToEnd: string) {
     const result = await this.recognizePetModel.findOne({ endToEnd: endToEnd });
+
     return result;
   }
 }
