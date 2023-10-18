@@ -41,7 +41,7 @@ export class RecognizePetService {
 
     const recognizePetModel: RecognizePetDto = {
       endToEnd: endToEnd,
-      resultRecognator: 'NaN',
+      resultRecognator: null,
       url: url,
     };
 
