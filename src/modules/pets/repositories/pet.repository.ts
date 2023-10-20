@@ -5,7 +5,7 @@ export abstract class PetRepository {
   abstract create(createPet: CreatePetDto): Promise<Pet>;
   abstract findAll(): Promise<Pet[]>;
   abstract findAllById(petId: string): Promise<Pet>;
-  abstract removeById(petId: string): Promise<void>;
+  abstract removeById(petId: string): Promise<Pet>;
   abstract getImagesFromPetById(
     petId: string,
   ): Promise<{ location: string; image: string }[]>;

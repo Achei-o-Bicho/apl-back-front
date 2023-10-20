@@ -28,8 +28,8 @@ export class PetRepositoryService implements PetRepository {
   async findAllById(petId: string): Promise<Pet> {
     return this.petModel.findById(petId);
   }
-  async removeById(petId: string): Promise<void> {
-    await this.petModel.findByIdAndRemove(petId);
+  removeById(petId: string): Promise<Pet> {
+    return this.petModel.findByIdAndRemove(petId);
   }
 
   async updateImageAnimal(

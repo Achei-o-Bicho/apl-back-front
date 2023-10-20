@@ -29,10 +29,11 @@ export class PetsService {
     return this.petRepository.findAllById(petId);
   }
 
-  async removeById(petId: string): Promise<void> {
-    const deletedPet = this.petRepository.removeById(petId);
-    if (!deletedPet) throw new NotFoundException(`Pet ${petId} not found`);
-    return this.petRepository.removeById(petId);
+  async removeById(petId: string): Promise<Pet> {
+    if (!(await this.findAllById(petId))) {
+      throw new NotFoundException(`Pet ${petId} not found`);
+    }
+    return await this.petRepository.removeById(petId);
   }
 
   private async updateFieldImageInPet(

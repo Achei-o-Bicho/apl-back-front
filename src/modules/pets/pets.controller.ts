@@ -93,10 +93,16 @@ export class PetsController {
     try {
       await this.petService.removeById(idPet);
 
-      res.status(HttpStatus.NO_CONTENT);
+      res.status(HttpStatus.NO_CONTENT).json();
     } catch (err) {
       this.logger.error(err);
-      res.status(500).json();
+      if (err.response) {
+        return res
+          .status(err.response.statusCode)
+          .json({ message: err.response.message });
+      } else {
+        res.status(500).json();
+      }
     }
   }
 
