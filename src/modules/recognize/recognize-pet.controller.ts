@@ -17,6 +17,8 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
 import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
+import { IUser } from '../users/interface/user.interface';
+import { User } from '../users/schema/user.schema';
 
 @ApiTags('Recognize')
 @Controller('recognize')
@@ -75,7 +77,7 @@ export class RecognizePetController {
 
       const pet = await this.petService.findAllById(resultRecognator);
 
-      const { contact, name } = await this.userService.findUserByPetId(
+      const { contact, name }: User = await this.userService.findUserByPetId(
         resultRecognator,
       );
 
@@ -84,8 +86,8 @@ export class RecognizePetController {
         result: {
           pet: pet,
           user: {
-            contact,
             name,
+            phone: contact.phone,
           },
         },
         url,
