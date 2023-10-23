@@ -75,12 +75,6 @@ export class RecognizePetController {
 
       const pet = await this.petService.findAllById(resultRecognator);
 
-      if (!pet) {
-        return res
-          .status(HttpStatus.NOT_FOUND)
-          .json({ message: 'Pet not found' });
-      }
-
       const { contact, name } = await this.userService.findUserByPetId(
         resultRecognator,
       );
