@@ -81,7 +81,7 @@ export class RecognizePetController {
           .json({ message: 'Pet not found' });
       }
 
-      const { contact } = await this.userService.findUserByPetId(
+      const { contact, name } = await this.userService.findUserByPetId(
         resultRecognator,
       );
 
@@ -89,7 +89,10 @@ export class RecognizePetController {
         endToEnd,
         result: {
           pet: pet,
-          userPhone: contact.phone,
+          user: {
+            contact,
+            name,
+          },
         },
         url,
       });
