@@ -34,8 +34,6 @@ export class LambdaService {
         .post(url, data, config)
         .toPromise();
 
-      console.log(response);
-
       if (response.status !== 200) {
         this.logger.error('Error to send data for Cloud Function');
       }
