@@ -15,13 +15,19 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RecognizePetService } from './recognize-pet.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
+import { PetsService } from '../pets/pet.service';
+import { UsersService } from '../users/users.service';
 
 @ApiTags('Recognize')
 @Controller('recognize')
 export class RecognizePetController {
   private readonly logger = new Logger(RecognizePetController.name);
 
-  constructor(private recognizeService: RecognizePetService) {}
+  constructor(
+    private recognizeService: RecognizePetService,
+    private petService: PetsService,
+    private userService: UsersService,
+  ) {}
 
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Recognize Pet by Image' })
@@ -67,9 +73,22 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
+      const pet = await this.petService.findAllById(resultRecognator);
+
+      if (!pet) {
+        return res
+          .status(HttpStatus.NOT_FOUND)
+          .json({ message: 'Pet not found' });
+      }
+
+      const { contact } = await this.userService.findUserByPetId(pet.petId);
+
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        resultRecognator,
+        result: {
+          pet: pet,
+          userPhone: contact.phone,
+        },
         url,
       });
     } catch (err) {

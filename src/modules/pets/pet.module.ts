@@ -30,5 +30,6 @@ import { LambdaModule } from '../lambda/lambda.module';
       useClass: PetRepositoryService,
     },
   ],
+  exports: [PetsService],
 })
 export class PetsModule {}

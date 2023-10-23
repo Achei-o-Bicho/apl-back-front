@@ -16,7 +16,7 @@ export class ImagesPet {
 @Schema()
 export class Pet {
   @Prop({ unique: true })
-  petId: number;
+  petId: string;
 
   @Prop({ required: true })
   name: string;

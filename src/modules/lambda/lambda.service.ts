@@ -34,6 +34,8 @@ export class LambdaService {
         .post(url, data, config)
         .toPromise();
 
+      console.log(response);
+
       if (response.status !== 200) {
         this.logger.error('Error to send data for Cloud Function');
       }
@@ -47,4 +49,5 @@ export class LambdaService {
 
 export interface ISaveImageGoogleCloudFunction {
   location: string;
+  message: string;
 }
