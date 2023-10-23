@@ -97,8 +97,6 @@ export class PetsService {
 
     const imageBufferBase64 = imageResized.toString('base64');
 
-    await this.updateFieldImageInPet(url, petId, imageBufferBase64);
-
     return { url: url, image: imageBufferBase64 };
   }
 
