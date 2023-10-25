@@ -41,4 +41,16 @@ export class AuthService {
       this.logger.error(err);
     }
   }
+
+  public async getUserFromAuthenticationToken(token: string) {
+    const payload: DecodedToken = this.jwtService.verify(token, {
+      secret: process.env['SECRET_KEY'],
+    });
+
+    const userId = payload.cpf;
+
+    if (userId) {
+      return this.userService.findById('userId');
+    }
+  }
 }

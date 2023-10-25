@@ -35,6 +35,12 @@ export class UsersService {
     return userData;
   }
 
+  async findUserByCpf(cpf: string): Promise<IUser> {
+    const user = await this.userModel.findOne({ document: cpf });
+    if (!user) throw new NotFoundException(`User ${cpf} not found`);
+    return user;
+  }
+
   async updateUserById(
     userId: string,
     updateStudentDto: CreateUserDto,
