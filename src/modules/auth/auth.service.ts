@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { IUser } from '../users/interface/user.interface';
 import { maskedUser } from 'src/utils/mask.utils';
+import { DecodedToken } from './interface/decoded-token.interface';
 
 @Injectable()
 export class AuthService {
