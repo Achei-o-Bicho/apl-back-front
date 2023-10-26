@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument, Types } from 'mongoose';
 
 @Schema()
 export class RecognizePet extends Document {
@@ -7,7 +7,7 @@ export class RecognizePet extends Document {
   endToEnd: string;
 
   @Prop()
-  resultRecognator: string;
+  resultRecognator: Types.Array<string>;
 
   @Prop()
   url: string;

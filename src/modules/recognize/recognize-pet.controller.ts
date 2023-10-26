@@ -75,21 +75,25 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
-      const pet = await this.petService.findAllById(resultRecognator);
-
-      const { contact, name }: User = await this.userService.findUserByPetId(
-        resultRecognator,
-      );
+      const resultsRecognator =
+        resultRecognator && resultRecognator.length > 0
+          ? resultRecognator.map(async (pet) => {
+              const petFinded = await this.petService.findAllById(pet);
+              const { contact, name }: User =
+                await this.userService.findUserByPetId(pet);
+              return {
+                pet: petFinded,
+                user: {
+                  name,
+                  phone: contact.phone,
+                },
+              };
+            })
+          : [];
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        result: {
-          pet: pet,
-          user: {
-            name,
-            phone: contact.phone,
-          },
-        },
+        results: resultsRecognator,
         url,
       });
     } catch (err) {
