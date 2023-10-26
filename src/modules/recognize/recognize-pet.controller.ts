@@ -79,6 +79,7 @@ export class RecognizePetController {
         resultRecognator && resultRecognator.length > 0
           ? resultRecognator.map(async (pet) => {
               const petFinded = await this.petService.findAllById(pet);
+              if (!petFinded) return null;
               const { contact, name }: User =
                 await this.userService.findUserByPetId(pet);
               return {
@@ -89,7 +90,7 @@ export class RecognizePetController {
                 },
               };
             })
-          : [];
+          : null;
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
