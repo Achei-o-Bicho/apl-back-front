@@ -75,28 +75,42 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
-      const resultsRecognator =
-        resultRecognator && resultRecognator.length > 0
-          ? resultRecognator.map(async (pet) => {
-              this.logger.log(pet);
-              const petFinded = await this.petService.findAllById(pet);
-              if (!petFinded) return null;
-              const { contact, name }: User =
-                await this.userService.findUserByPetId(pet);
-              this.logger.log(contact, name);
-              return {
-                pet: petFinded,
-                user: {
-                  name,
-                  phone: contact.phone,
-                },
-              };
-            })
-          : null;
+      const pet = await this.petService.findAllById(resultRecognator[0]);
+
+      const { contact, name }: User = await this.userService.findUserByPetId(
+        resultRecognator[0],
+      );
+
+      // const resultsRecognator =
+      //   resultRecognator && resultRecognator.length > 0
+      //     ? resultRecognator.map(async (pet) => {
+      //         this.logger.log(pet);
+      //         const petFinded = await this.petService.findAllById(pet);
+      //         if (!petFinded) return null;
+      //         const { contact, name }: User =
+      //           await this.userService.findUserByPetId(pet);
+      //         this.logger.log(contact, name);
+      //         return {
+      //           pet: petFinded,
+      //           user: {
+      //             name,
+      //             phone: contact.phone,
+      //           },
+      //         };
+      //       })
+      //     : null;
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        results: resultsRecognator,
+        // results: resultsRecognator,
+        result: {
+          pet: pet,
+          user: {
+            contact,
+            name,
+            phone: contact.phone,
+          },
+        },
         url,
       });
     } catch (err) {
