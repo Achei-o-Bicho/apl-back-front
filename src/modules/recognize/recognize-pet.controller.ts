@@ -77,11 +77,11 @@ export class RecognizePetController {
 
       this.logger.log(resultRecognator);
 
-      const pet = await this.petService.findAllById(resultRecognator[0]);
+      // const pet = await this.petService.findAllById(resultRecognator[0]);
 
-      const { contact, name }: User = await this.userService.findUserByPetId(
-        resultRecognator[0],
-      );
+      // const { contact, name }: User = await this.userService.findUserByPetId(
+      //   resultRecognator[0],
+      // );
 
       // const resultsRecognator =
       //   resultRecognator && resultRecognator.length > 0
