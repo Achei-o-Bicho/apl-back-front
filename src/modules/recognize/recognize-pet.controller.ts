@@ -105,14 +105,18 @@ export class RecognizePetController {
       return res.status(HttpStatus.OK).json({
         endToEnd,
         // results: resultsRecognator,
-        result: {
-          pet: pet,
-          user: {
-            contact,
-            name,
-            phone: contact.phone,
-          },
-        },
+        resultRecognator:
+          resultRecognator && resultRecognator.length > 0
+            ? resultRecognator[0]
+            : null,
+        // result: {
+        //   pet: pet,
+        //   user: {
+        //     contact,
+        //     name,
+        //     phone: contact.phone,
+        //   },
+        // },
         url,
       });
     } catch (err) {
