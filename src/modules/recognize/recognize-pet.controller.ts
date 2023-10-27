@@ -78,6 +78,7 @@ export class RecognizePetController {
       const resultsRecognator =
         resultRecognator && resultRecognator.length > 0
           ? resultRecognator.map(async (pet) => {
+              this.logger.log(pet);
               const petFinded = await this.petService.findAllById(pet);
               if (!petFinded) return null;
               const { contact, name }: User =
