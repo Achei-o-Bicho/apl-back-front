@@ -75,6 +75,8 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
+      this.logger.log(resultRecognator);
+
       const pet = await this.petService.findAllById(resultRecognator[0]);
 
       const { contact, name }: User = await this.userService.findUserByPetId(
