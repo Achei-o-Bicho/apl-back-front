@@ -81,7 +81,8 @@ export class RecognizePetController {
               this.logger.log(pet);
               const petFinded = await this.petService.findAllById(pet);
               if (!petFinded) return null;
-              const { contact, name }: User = await this.userService.findUserByPetId(pet);
+              const { contact, name }: User =
+                await this.userService.findUserByPetId(pet);
               this.logger.log(contact, name);
               return {
                 pet: petFinded,
