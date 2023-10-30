@@ -34,8 +34,13 @@ export class AuthService {
   async login(user: IUser) {
     try {
       const payload = maskedUser(user);
+      const { cpf, name, contact } = payload;
       return {
-        accessToken: this.jwtService.sign(payload),
+        accessToken: this.jwtService.sign({
+          cpf: cpf,
+          name: name,
+          contact: contact,
+        }),
         userId: user._id,
       };
     } catch (err) {
