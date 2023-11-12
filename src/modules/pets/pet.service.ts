@@ -29,10 +29,17 @@ export class PetsService {
     return this.petRepository.findAllById(petId);
   }
 
-  async removeById(petId: string): Promise<Pet> {
-    if (!(await this.findAllById(petId))) {
-      throw new NotFoundException(`Pet ${petId} not found`);
+  async removeById(petId: string, userId: string): Promise<Pet> {
+    const user = await this.usersService.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException(`User ${userId} not found`);
     }
+
+    user.pets = user.pets.filter((pet) => pet.toString() !== petId);
+
+    await this.usersService.updateUserById(userId, user);
+
     return await this.petRepository.removeById(petId);
   }
 

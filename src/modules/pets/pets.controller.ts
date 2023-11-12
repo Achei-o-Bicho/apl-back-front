@@ -9,9 +9,9 @@ import {
   Delete,
   Logger,
   UploadedFile,
-  Query,
   UseInterceptors,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
@@ -89,9 +89,11 @@ export class PetsController {
   @ApiOperation({ summary: 'Delete a pet by ID' })
   @ApiResponse({ status: 204, description: 'Pet deleted successfully' })
   @Delete(':id')
-  public async delete(@Res() res, @Param('id') idPet: string) {
+  public async delete(@Res() res, @Param('id') idPet: string, @Req() req) {
+    const user = req.user;
+
     try {
-      await this.petService.removeById(idPet);
+      await this.petService.removeById(idPet, user.userId);
 
       res.status(HttpStatus.NO_CONTENT).json();
     } catch (err) {
