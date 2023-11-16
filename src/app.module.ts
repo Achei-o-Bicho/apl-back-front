@@ -11,7 +11,7 @@ import { AwsSdkModule } from 'nest-aws-sdk';
 import { Credentials, S3 } from 'aws-sdk';
 import { ResizeImageModule } from './modules/resize-image/resize-image.module';
 import { RecognizePeModule } from './modules/recognize/recognize-pet.module';
-import { LambdaModule } from './modules/lambda/lambda.module';
+import { ChatsModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -24,6 +24,7 @@ import { LambdaModule } from './modules/lambda/lambda.module';
     ResizeImageModule,
     RecognizePeModule,
     AwsModule,
+    ChatsModule,
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
         region: process.env.REGION_AWS,

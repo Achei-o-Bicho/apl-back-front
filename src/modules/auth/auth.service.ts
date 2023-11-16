@@ -53,10 +53,10 @@ export class AuthService {
       secret: process.env['SECRET_KEY'],
     });
 
-    const userId = payload.cpf;
+    const userId = payload.userId;
 
     if (userId) {
-      return this.userService.findById('userId');
+      return this.userService.findById(userId);
     }
   }
 }

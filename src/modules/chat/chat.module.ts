@@ -1,18 +1,33 @@
-import {
-  MessageBody,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer,
-} from '@nestjs/websockets';
-import { Server } from 'socket.io';
+import { Message, MessageSchema } from './schema/message.schema';
+import { Module } from '@nestjs/common';
+import { ChatController } from './chat.controller';
+import { ChatService } from './chat.service';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from '../auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { ChatGateway } from './chat.gateway';
+import { UsersModule } from '../users/users.module';
+import { Room, RoomSchema } from './schema/room.schema';
 
-@WebSocketGateway()
-export class ChatModule {
-  @WebSocketServer()
-  server: Server;
-
-  @SubscribeMessage('send_message')
-  listenForMessages(@MessageBody() message: string) {
-    this.server.sockets.emit('receive_message', message);
-  }
-}
+@Module({
+  imports: [
+    UsersModule,
+    JwtModule,
+    AuthModule,
+    MongooseModule.forFeature([
+      {
+        name: Message.name,
+        schema: MessageSchema,
+        collection: 'COLLECTION_MESSAGES',
+      },
+      {
+        name: Room.name,
+        schema: RoomSchema,
+        collection: 'COLLECTION_ROOM',
+      },
+    ]),
+  ],
+  controllers: [ChatController],
+  providers: [ChatGateway, ChatService],
+})
+export class ChatsModule {}

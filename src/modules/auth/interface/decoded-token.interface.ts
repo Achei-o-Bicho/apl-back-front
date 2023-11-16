@@ -8,6 +8,7 @@ export interface DecodedToken {
   zipCode: string;
   borough: string;
   pets: string[];
+  userId: string;
   iat: number;
   exp: number;
 }
