@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -19,6 +20,7 @@ import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
 import { IUser } from '../users/interface/user.interface';
 import { User } from '../users/schema/user.schema';
+import { Pet } from '../pets/pet.schema';
 
 @ApiTags('Recognize')
 @Controller('recognize')
@@ -60,14 +62,15 @@ export class RecognizePetController {
   @Get(':endToEnd')
   public async getStatusResultRecognator(
     @Param('endToEnd') endToEndParam: string,
+    @Query('showImage') showImage: boolean,
     @Res() res: Response,
   ) {
     try {
-      const recognize = await this.recognizeService.getStatusRecognizer(
-        endToEndParam,
-      );
+      const [recognize] = await Promise.all([
+        this.recognizeService.getStatusRecognizer(endToEndParam),
+      ]);
 
-      if (!recognize || recognize == null) {
+      if (!recognize) {
         return res
           .status(HttpStatus.NOT_FOUND)
           .json({ message: 'EndToEnd not found' });
@@ -75,48 +78,43 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
-      this.logger.log(resultRecognator);
+      const pets: {
+        pet: Pet | Omit<Pet, 'images'>;
+        user: { name: string; phone: string };
+      }[] = await Promise.all(
+        resultRecognator.map(async (petId) => {
+          try {
+            const petFinded = await this.petService.findAllById(petId);
 
-      // const pet = await this.petService.findAllById(resultRecognator[0]);
+            if (!petFinded) return null;
 
-      // const { contact, name }: User = await this.userService.findUserByPetId(
-      //   resultRecognator[0],
-      // );
+            const userPet = await this.userService.findUserByPetId(petId);
 
-      // const resultsRecognator =
-      //   resultRecognator && resultRecognator.length > 0
-      //     ? resultRecognator.map(async (pet) => {
-      //         this.logger.log(pet);
-      //         const petFinded = await this.petService.findAllById(pet);
-      //         if (!petFinded) return null;
-      //         const { contact, name }: User =
-      //           await this.userService.findUserByPetId(pet);
-      //         this.logger.log(contact, name);
-      //         return {
-      //           pet: petFinded,
-      //           user: {
-      //             name,
-      //             phone: contact.phone,
-      //           },
-      //         };
-      //       })
-      //     : null;
+            if (!userPet) return null;
+
+            const { contact, name } = userPet;
+
+            if (!!showImage) {
+              delete petFinded.images;
+            }
+
+            return {
+              pet: petFinded,
+              user: {
+                name,
+                phone: contact.phone,
+              },
+            };
+          } catch (error) {
+            this.logger.error(error);
+            return null;
+          }
+        }),
+      );
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        // results: resultsRecognator,
-        resultRecognator:
-          resultRecognator && resultRecognator.length > 0
-            ? resultRecognator[0]
-            : null,
-        // result: {
-        //   pet: pet,
-        //   user: {
-        //     contact,
-        //     name,
-        //     phone: contact.phone,
-        //   },
-        // },
+        results: pets,
         url,
       });
     } catch (err) {
