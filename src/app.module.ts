@@ -1,8 +1,7 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { PetsModule } from './modules/pets/pet.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { LoggerMiddleware } from './logger.middleware';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SendMessageModule } from './modules/send-message/send-message.module';
@@ -13,6 +12,7 @@ import { ResizeImageModule } from './modules/resize-image/resize-image.module';
 import { RecognizePeModule } from './modules/recognize/recognize-pet.module';
 import { ChatsModule } from './modules/chat/chat.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -43,12 +43,9 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 5,
       },
     ]),
+    LoggerModule.forRoot(),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}
