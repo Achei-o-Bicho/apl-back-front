@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Logger as LoggerPino } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.useLogger(app.get(LoggerPino));
 
   const config = new DocumentBuilder()
     .setTitle('BFF do Projeto Achei o Bicho')
@@ -23,4 +26,5 @@ async function bootstrap() {
   await app.listen(process.env.PORT);
   new Logger('NestApplication').log('Running app at port: ' + process.env.PORT);
 }
+
 bootstrap();
