@@ -1,4 +1,4 @@
-import { CreatePetDto } from '../dto/pet.dto';
+import { CreatePetDto } from '../dto/create-pet.dto';
 import { Pet } from '../pet.schema';
 
 export abstract class PetRepository {
