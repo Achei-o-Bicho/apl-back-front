@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
-import { CreatePetDto } from './dto/pet.dto';
+import { CreatePetDto } from './dto/create-pet.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../auth/auth.guard';
