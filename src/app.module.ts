@@ -12,6 +12,7 @@ import { Credentials, S3 } from 'aws-sdk';
 import { ResizeImageModule } from './modules/resize-image/resize-image.module';
 import { RecognizePeModule } from './modules/recognize/recognize-pet.module';
 import { ChatsModule } from './modules/chat/chat.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -36,6 +37,12 @@ import { ChatsModule } from './modules/chat/chat.module';
       },
       services: [S3],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 5,
+      },
+    ]),
   ],
   controllers: [],
   providers: [],

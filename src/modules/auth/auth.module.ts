@@ -6,6 +6,8 @@ import { JwtStrategy } from './strategy/jwt-strategy';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -17,7 +19,11 @@ import { ConfigModule } from '@nestjs/config';
       signOptions: { expiresIn: '1d' },
     }),
   ],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })
