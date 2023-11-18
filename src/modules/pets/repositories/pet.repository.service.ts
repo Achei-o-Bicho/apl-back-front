@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreatePetDto } from '../dto/pet.dto';
+import { CreatePetDto } from '../dto/create-pet.dto';
 import { Pet } from '../pet.schema';
 import { PetRepository } from './pet.repository';
 import { InjectModel } from '@nestjs/mongoose';
