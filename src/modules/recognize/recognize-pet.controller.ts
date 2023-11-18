@@ -18,8 +18,6 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Response } from 'express';
 import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
-import { IUser } from '../users/interface/user.interface';
-import { User } from '../users/schema/user.schema';
 import { Pet } from '../pets/pet.schema';
 
 @ApiTags('Recognize')
