@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Pet } from './pet.schema';
-import { CreatePetDto } from './dto/pet.dto';
+import { CreatePetDto } from './dto/create-pet.dto';
 import { PetRepository } from './repositories/pet.repository';
 import { UsersService } from '../users/users.service';
 import { ImageResizeService } from '../resize-image/resize-image.service';
 import { LambdaService } from '../lambda/lambda.service';
+import { PetDto } from './dto/pet.dto';
 
 @Injectable()
 export class PetsService {
@@ -23,10 +24,23 @@ export class PetsService {
     return await this.petRepository.findAll();
   }
 
-  async findAllById(petId: string): Promise<Pet> {
-    const petFounded = this.petRepository.findAllById(petId);
-    if (!petFounded) throw new NotFoundException(`Pet ${petId} not found`);
-    return this.petRepository.findAllById(petId);
+  async findAllById(petId: string): Promise<PetDto> {
+    try {
+      const petFounded = await this.petRepository.findAllById(petId);
+      return {
+        petId: petFounded.petId,
+        name: petFounded.name,
+        gender: petFounded.gender,
+        breed: petFounded.breed,
+        birthday: petFounded.birthday,
+        type: petFounded.type,
+        pathImage: petFounded.pathImage,
+        description: petFounded.description,
+        images: petFounded.images,
+      };
+    } catch (error) {
+      throw new NotFoundException(`Pet ${petId} not found`);
+    }
   }
 
   async removeById(petId: string, userId: string): Promise<Pet> {
