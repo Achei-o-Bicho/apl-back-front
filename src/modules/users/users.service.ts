@@ -112,7 +112,7 @@ export class UsersService {
     return ownerWithPets;
   }
 
-  async findUserByPetId(petId: string) {
+  async findUserByPetId(petId: string): Promise<IUser> {
     const user = await this.userModel
       .findOne({ pets: new mongoose.Types.ObjectId(petId)._id })
       .exec();
