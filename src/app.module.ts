@@ -13,6 +13,7 @@ import { RecognizePeModule } from './modules/recognize/recognize-pet.module';
 import { ChatsModule } from './modules/chat/chat.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
+import { FeatureFlagModule } from './modules/feature-flag/feature-flag.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoggerModule } from 'nestjs-pino';
     RecognizePeModule,
     AwsModule,
     ChatsModule,
+    FeatureFlagModule,
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
         region: process.env.REGION_AWS,
@@ -40,7 +42,7 @@ import { LoggerModule } from 'nestjs-pino';
     ThrottlerModule.forRoot([
       {
         ttl: 60_000,
-        limit: 5,
+        limit: 10,
       },
     ]),
     LoggerModule.forRoot(),
