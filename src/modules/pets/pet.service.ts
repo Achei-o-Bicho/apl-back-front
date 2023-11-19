@@ -43,16 +43,16 @@ export class PetsService {
     }
   }
 
-  async removeById(petId: string, userId: string): Promise<Pet> {
-    const user = await this.usersService.findById(userId);
+  async removeById(petId: string): Promise<Pet> {
+    const user = await this.usersService.findUserByPetId(petId);
 
     if (!user) {
-      throw new NotFoundException(`User ${userId} not found`);
+      throw new NotFoundException(`Pet owner by ${petId} not found`);
     }
 
     user.pets = user.pets.filter((pet) => pet.toString() !== petId);
 
-    await this.usersService.updateUserById(userId, user);
+    await this.usersService.updateUserById(user._id, user);
 
     return await this.petRepository.removeById(petId);
   }
@@ -84,11 +84,13 @@ export class PetsService {
       mimetype,
     );
 
-    const url = result.location;
+    if (!result) return null;
 
     const imageResized = await this.imageResizeService.resizeImage(buffer);
 
     const imageBufferBase64 = imageResized.toString('base64');
+
+    const url = result.location;
 
     await this.updateFieldImageInPet(url, petId, imageBufferBase64);
 
@@ -111,6 +113,8 @@ export class PetsService {
       formatFileName,
       mimetype,
     );
+
+    if (!result) return null;
 
     const url = result.location;
 
