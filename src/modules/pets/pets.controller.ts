@@ -11,7 +11,7 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
-  Req,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { PetsService } from './pet.service';
 import { Response } from 'express';
@@ -19,13 +19,17 @@ import { CreatePetDto } from './dto/create-pet.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '../auth/auth.guard';
+import { ClassificationImageService } from '../classification-image/classification-image.service';
 
 @ApiTags('Pets')
 @Controller('pets')
 export class PetsController {
   private readonly logger = new Logger(PetsController.name);
 
-  constructor(private petService: PetsService) {}
+  constructor(
+    private petService: PetsService,
+    private readonly classificationImageService: ClassificationImageService,
+  ) {}
 
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get a pet by ID' })
@@ -89,11 +93,9 @@ export class PetsController {
   @ApiOperation({ summary: 'Delete a pet by ID' })
   @ApiResponse({ status: 204, description: 'Pet deleted successfully' })
   @Delete(':id')
-  public async delete(@Res() res, @Param('id') idPet: string, @Req() req) {
-    const user = req.user;
-
+  public async delete(@Res() res, @Param('id') idPet: string) {
     try {
-      await this.petService.removeById(idPet, user.userId);
+      await this.petService.removeById(idPet);
 
       res.status(HttpStatus.NO_CONTENT).json();
     } catch (err) {
@@ -141,7 +143,21 @@ export class PetsController {
     @Res() res: Response,
   ) {
     try {
+      const imageClass = await this.classificationImageService.classifyImage(
+        image.buffer,
+      );
+
+      if (imageClass && imageClass.className == null) {
+        return res
+          .status(HttpStatus.BAD_REQUEST)
+          .json({ message: 'Invalid image: not a cat or dog' });
+      }
+
       const petUpdated = await this.petService.saveImagePet(image, idPet);
+
+      if (!petUpdated || !petUpdated.url) {
+        throw new InternalServerErrorException('Fail at save image pet');
+      }
 
       await this.petService.saveImagePetDirectoryOnly(image, idPet);
 
