@@ -14,6 +14,7 @@ import { ChatsModule } from './modules/chat/chat.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { FeatureFlagModule } from './modules/feature-flag/feature-flag.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
@@ -27,7 +28,6 @@ import { FeatureFlagModule } from './modules/feature-flag/feature-flag.module';
     RecognizePeModule,
     AwsModule,
     ChatsModule,
-    FeatureFlagModule,
     AwsSdkModule.forRoot({
       defaultServiceOptions: {
         region: process.env.REGION_AWS,
@@ -46,6 +46,14 @@ import { FeatureFlagModule } from './modules/feature-flag/feature-flag.module';
       },
     ]),
     LoggerModule.forRoot(),
+    RedisModule.forRoot({
+      config: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        password: process.env.REDIS_PASSWORD,
+      },
+    }),
+    FeatureFlagModule,
   ],
   controllers: [],
   providers: [],
