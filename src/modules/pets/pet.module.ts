@@ -10,6 +10,8 @@ import { UsersModule } from '../users/users.module';
 import { ResizeImageModule } from '../resize-image/resize-image.module';
 import { JwtModule } from '@nestjs/jwt';
 import { LambdaModule } from '../lambda/lambda.module';
+import { ClassificationImageModule } from '../classification-image/classification-image.module';
+import { FeatureFlagModule } from '../feature-flag/feature-flag.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { LambdaModule } from '../lambda/lambda.module';
     AwsModule,
     ResizeImageModule,
     LambdaModule,
+    ClassificationImageModule,
+    FeatureFlagModule,
     MongooseModule.forFeature([
       { name: Pet.name, schema: PetSchema, collection: 'COLLECTION_PET' },
     ]),
