@@ -3,7 +3,7 @@ FROM node:18.16.0
 
 ENV DB_URL="mongodb://mongo:27017/ACHEI_O_BICHO"
 ENV PORT=8080
-ENV REDIS_HOST="redis"
+ENV REDIS_HOST="redis://redis"
 ENV REDIS_PORT=6379
 ENV REDIS_PASSWORD='O#lxYry!zEa><FKa'
 ENV GLOBAL_PATH=apl-back-front/v1
