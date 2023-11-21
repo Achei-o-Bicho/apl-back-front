@@ -10,4 +10,5 @@ export class IUser {
   borough: string;
   zipCode: string;
   pets: Pet[];
+  roles: string[];
 }
