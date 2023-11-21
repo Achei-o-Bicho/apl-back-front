@@ -27,5 +27,6 @@ export const maskedUser = (user: IUser) => {
     zipCode: user.zipCode,
     borough: user.borough,
     pets: user.pets,
+    roles: user.roles,
   };
 };
