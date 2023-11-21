@@ -7,10 +7,12 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FeatureFlagService } from './feature-flag.service';
 import { IFeatureFlag } from './feature-flag.interface';
+import { AuthGuard } from '../auth/auth.guard';
 
 @ApiTags('Feature Flag')
 @Controller('feature-flag')
@@ -18,6 +20,7 @@ export class FeatureFlagController {
   constructor(private readonly featureFlagService: FeatureFlagService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   @ApiResponse({
     status: 200,
     description: 'Retorna a flag de recurso para a chave especificada.',
@@ -31,6 +34,7 @@ export class FeatureFlagController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   @ApiResponse({
     status: 201,
     description: 'Define a flag de recurso para a chave especificada.',
@@ -51,6 +55,7 @@ export class FeatureFlagController {
   }
 
   @Put()
+  @UseGuards(AuthGuard)
   @ApiResponse({
     status: 200,
     description: 'Flag updated successfully',
