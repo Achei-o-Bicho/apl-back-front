@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ContactDto } from '../dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import { Pet } from 'src/modules/pets/pet.schema';
+import { Roles } from "../roles.enum";
 
 @Schema()
 export class User extends Document {
@@ -33,6 +34,13 @@ export class User extends Document {
     required: false,
   })
   pets: Types.Array<Pet>;
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.String }],
+    required: false,
+    default: [Roles.USER],
+  })
+  roles: Types.Array<string>;
 
   async comparePassword(attempt: string): Promise<boolean> {
     return await bcrypt.compare(attempt, this.password);
