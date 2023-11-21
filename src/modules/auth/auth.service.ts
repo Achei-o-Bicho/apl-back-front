@@ -40,6 +40,7 @@ export class AuthService {
           cpf: cpf,
           name: name,
           contact: contact,
+          roles: payload.roles,
         }),
         userId: user._id,
       };
