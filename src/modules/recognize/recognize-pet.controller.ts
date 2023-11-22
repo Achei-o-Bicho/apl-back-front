@@ -80,7 +80,7 @@ export class RecognizePetController {
         pet: Pet | Omit<Pet, 'images'>;
         user: { name: string; phone: string };
       }[] = await Promise.all(
-        !resultRecognator
+        !resultRecognator || resultRecognator === null
           ? []
           : resultRecognator.map(async (petId) => {
               try {
