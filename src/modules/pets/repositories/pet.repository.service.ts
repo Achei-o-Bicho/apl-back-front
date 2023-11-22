@@ -26,8 +26,18 @@ export class PetRepositoryService implements PetRepository {
     return this.petModel.find().exec();
   }
   async findAllById(petId: string): Promise<Pet> {
-    return this.petModel.findById(petId);
+    const pet = this.petModel.findById(petId);
+    if (!pet) {
+      return await this.findAllByIdPet(petId);
+    }
+
+    return pet;
   }
+
+  async findAllByIdPet(petId: string): Promise<Pet> {
+    return await this.petModel.findOne({ petId: petId });
+  }
+
   removeById(petId: string): Promise<Pet> {
     return this.petModel.findByIdAndRemove(petId);
   }
