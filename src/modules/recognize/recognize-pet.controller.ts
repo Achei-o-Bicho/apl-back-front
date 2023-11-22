@@ -81,7 +81,7 @@ export class RecognizePetController {
         user: { name: string; phone: string };
       }[] = await Promise.all(
         !resultRecognator || resultRecognator === null
-          ? []
+          ? null
           : resultRecognator.map(async (petId) => {
               try {
                 const petFinded = await this.petService.findAllById(petId);
