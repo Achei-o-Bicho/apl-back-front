@@ -5,6 +5,7 @@ import { PetRepository } from './pet.repository';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/modules/users/users.service';
+import { PetDto } from '../dto/pet.dto';
 
 @Injectable()
 export class PetRepositoryService implements PetRepository {
@@ -25,13 +26,8 @@ export class PetRepositoryService implements PetRepository {
   async findAll(): Promise<Pet[]> {
     return this.petModel.find().exec();
   }
-  async findAllById(petId: string): Promise<Pet> {
-    const pet = this.petModel.findById(petId);
-    if (!pet) {
-      return await this.findAllByIdPet(petId);
-    }
-
-    return pet;
+  async findAllById(petId: string): Promise<PetDto> {
+    return this.petModel.findById(petId);
   }
 
   async findAllByIdPet(petId: string): Promise<Pet> {

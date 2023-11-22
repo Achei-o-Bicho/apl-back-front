@@ -28,6 +28,7 @@ export class PetsService {
     try {
       const petFounded = await this.petRepository.findAllById(petId);
       return {
+        _id: petFounded._id,
         petId: petFounded.petId,
         name: petFounded.name,
         gender: petFounded.gender,
