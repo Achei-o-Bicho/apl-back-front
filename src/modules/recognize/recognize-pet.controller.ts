@@ -80,34 +80,36 @@ export class RecognizePetController {
         pet: Pet | Omit<Pet, 'images'>;
         user: { name: string; phone: string };
       }[] = await Promise.all(
-        resultRecognator.map(async (petId) => {
-          try {
-            const petFinded = await this.petService.findAllById(petId);
+        !resultRecognator
+          ? []
+          : resultRecognator.map(async (petId) => {
+              try {
+                const petFinded = await this.petService.findAllById(petId);
 
-            if (!petFinded) return null;
+                if (!petFinded) return null;
 
-            const userPet = await this.userService.findUserByPetId(petId);
+                const userPet = await this.userService.findUserByPetId(petId);
 
-            if (!userPet) return null;
+                if (!userPet) return null;
 
-            const { contact, name } = userPet;
+                const { contact, name } = userPet;
 
-            if (!!showImage) {
-              delete petFinded.images;
-            }
+                if (!!showImage) {
+                  delete petFinded.images;
+                }
 
-            return {
-              pet: petFinded,
-              user: {
-                name,
-                phone: contact.phone,
-              },
-            };
-          } catch (error) {
-            this.logger.error(error);
-            return null;
-          }
-        }),
+                return {
+                  pet: petFinded,
+                  user: {
+                    name,
+                    phone: contact.phone,
+                  },
+                };
+              } catch (error) {
+                this.logger.error(error);
+                return null;
+              }
+            }),
       );
 
       return res.status(HttpStatus.OK).json({
