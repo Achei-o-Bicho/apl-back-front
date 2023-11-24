@@ -79,7 +79,9 @@ export class ChatService {
   }
 
   async getAllMessages(userId: string) {
-    const rooms = await this.roomModel.find<IRoom>({ 'sender._id': userId });
+    const rooms = await this.roomModel.find<IRoom>({
+      $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
+    })
     return rooms.sort(
       (roomA, roomB) => roomA.updatedAt.getTime() - roomB.updatedAt.getTime(),
     );
