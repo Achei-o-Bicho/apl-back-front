@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ChatGateway } from './chat.gateway';
 import { UsersModule } from '../users/users.module';
 import { Room, RoomSchema } from './schema/room.schema';
+import { User, UserSchema } from '../users/schema/user.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,11 @@ import { Room, RoomSchema } from './schema/room.schema';
         name: Room.name,
         schema: RoomSchema,
         collection: 'COLLECTION_ROOM',
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
+        collection: 'COLLECTION_USER',
       },
     ]),
   ],
