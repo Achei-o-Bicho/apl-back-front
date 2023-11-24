@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
         secret: process.env.SECRET_KEY,
       });
 
-      if (request.url.includes('feature-flag')) {
+      if (request.url.includes('feature-flag', 'chat')) {
         if (!payload.roles.includes(Roles.ADMIN)) return false;
       }
 
