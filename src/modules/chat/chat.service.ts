@@ -21,23 +21,19 @@ export class ChatService {
   ) {}
 
   async getUserFromSocket(socket: Socket) {
-    try {
-      let auth_token = socket.handshake.headers.authorization;
+    let auth_token = socket.handshake.headers.authorization;
 
-      auth_token = auth_token.split(' ')[1];
+    auth_token = auth_token.split(' ')[1];
 
-      const user = await this.authService.getUserFromAuthenticationToken(
-        auth_token,
-      );
+    const user = await this.authService.getUserFromAuthenticationToken(
+      auth_token,
+    );
 
-      if (!user) {
-        throw new WsException('Invalid credentials.');
-      }
-
-      return user;
-    } catch (exception) {
-      throw new InternalServerErrorException(exception);
+    if (!user) {
+      throw new WsException('Invalid credentials.');
     }
+
+    return user;
   }
 
   async createMessage(message: MessageDto) {
