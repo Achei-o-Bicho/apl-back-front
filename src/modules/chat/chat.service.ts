@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
@@ -10,6 +10,10 @@ import { UsersService } from '../users/users.service';
 import { Room, RoomDocument } from './schema/room.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { RoomDto } from './dto/room.dto';
+import { IUser } from '../users/interface/user.interface';
+import { User, UserDocument } from '../users/schema/user.schema';
+import { IMessage } from './interface/message.interface';
+import { IRoom } from './interface/room.interface';
 
 @Injectable()
 export class ChatService {
@@ -18,6 +22,7 @@ export class ChatService {
     private readonly usersService: UsersService,
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
   async getUserFromSocket(socket: Socket) {
@@ -36,27 +41,30 @@ export class ChatService {
     return user;
   }
 
-  async createMessage(message: MessageDto) {
-    const user = await this.usersService.findById(message.userId);
+  async createMessage(message: MessageDto, sender: IUser) {
+    const user = await this.usersService.findById(message.userIdReceiver);
 
     const newMessage = new this.messageModel({
       user: user,
       message: message.message,
     });
 
-    let room = await this.roomModel.findById(message.room.id);
+    const senderModel = new this.userModel(sender);
+    const receiverModel = new this.userModel(user);
+
+    let room;
+
+    if (message.room) {
+      room = await this.roomModel.findById(message.room.id);
+    }
 
     if (!room) {
       room = new this.roomModel({
-        _id: message.room.id,
+        _id: uuidv4(),
         messages: [],
+        sender: senderModel,
+        receiver: receiverModel,
       });
-    }
-
-    if (!message?.room?.id) {
-      message.room = {
-        id: uuidv4(),
-      };
     }
 
     const messageSaved = await newMessage.save();
@@ -70,7 +78,10 @@ export class ChatService {
     return this.roomModel.findById(room.id);
   }
 
-  async getAllMessages() {
-    return this.roomModel.find();
+  async getAllMessages(userId: string) {
+    const rooms = await this.roomModel.find<IRoom>({ 'sender._id': userId });
+    return rooms.sort(
+      (roomA, roomB) => roomA.updatedAt.getTime() - roomB.updatedAt.getTime(),
+    );
   }
 }

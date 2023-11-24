@@ -10,7 +10,7 @@ export class MessageDto {
 
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  userIdReceiver: string;
 
   @IsNotEmpty()
   room: RoomDto;

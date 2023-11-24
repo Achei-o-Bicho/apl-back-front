@@ -38,7 +38,7 @@ export class ChatGateway implements OnGatewayConnection {
       recipientSocket.emit('receive_message', message);
     }
 
-    const newmessage = await this.chatsService.createMessage(message);
+    const newmessage = await this.chatsService.createMessage(message, sender);
 
     return newmessage;
   }
@@ -57,7 +57,9 @@ export class ChatGateway implements OnGatewayConnection {
 
   @SubscribeMessage('get_all_rooms')
   async getAllMessages(@ConnectedSocket() socket: Socket) {
-    const messages = await this.chatsService.getAllMessages();
+    const sender = await this.chatsService.getUserFromSocket(socket);
+
+    const messages = await this.chatsService.getAllMessages(sender._id);
 
     socket.emit('receive_message', messages);
 
