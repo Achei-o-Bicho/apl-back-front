@@ -17,6 +17,7 @@ import { IMessage } from './interface/message.interface';
 
 @Injectable()
 export class ChatService {
+  private userSocketMap: Map<string, Socket> = new Map();
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
@@ -24,6 +25,14 @@ export class ChatService {
     @InjectModel(Room.name) private roomModel: Model<RoomDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
+
+  associateUserWithSocket(userId: string, socket: Socket): void {
+    this.userSocketMap.set(userId, socket);
+  }
+
+  getSocketByUserId(userId: string): Socket | undefined {
+    return this.userSocketMap.get(userId);
+  }
 
   async getUserFromSocket(socket: Socket) {
     let auth_token = socket.handshake.headers.authorization;
