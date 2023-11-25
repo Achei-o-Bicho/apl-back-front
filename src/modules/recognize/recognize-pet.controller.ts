@@ -10,12 +10,13 @@ import {
   UseGuards,
   UseInterceptors,
   Query,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RecognizePetService } from './recognize-pet.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
 import { Pet } from '../pets/pet.schema';
@@ -62,8 +63,11 @@ export class RecognizePetController {
     @Param('endToEnd') endToEndParam: string,
     @Query('showImage') showImage: boolean,
     @Res() res: Response,
+    @Req() req: Request,
   ) {
     try {
+      const userFromAuthorization = req['userFromAuthorization'];
+
       const [recognize] = await Promise.all([
         this.recognizeService.getStatusRecognizer(endToEndParam),
       ]);
@@ -76,7 +80,7 @@ export class RecognizePetController {
 
       const { endToEnd, resultRecognator, url } = recognize;
 
-      if (!resultRecognator || resultRecognator === null) {
+      if (!resultRecognator) {
         return res.status(HttpStatus.OK).json({
           endToEnd,
           results: null,
@@ -86,7 +90,7 @@ export class RecognizePetController {
 
       const pets: {
         pet: Pet | Omit<Pet, 'images'>;
-        user: { name: string; phone: string };
+        user: { name: string; phone: string; id: string };
       }[] = await Promise.all(
         resultRecognator.map(async (petId) => {
           try {
@@ -98,7 +102,7 @@ export class RecognizePetController {
 
             if (!userPet) return null;
 
-            const { contact, name } = userPet;
+            const { contact, name, _id } = userPet;
 
             if (!!showImage) {
               delete petFinded.images;
@@ -109,6 +113,7 @@ export class RecognizePetController {
               user: {
                 name,
                 phone: contact.phone,
+                id: _id,
               },
             };
           } catch (error) {
@@ -120,7 +125,9 @@ export class RecognizePetController {
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        results: pets,
+        results: userFromAuthorization
+          ? pets.filter((pet) => pet.user.id != userFromAuthorization.id)
+          : pets,
         url,
       });
     } catch (err) {
