@@ -59,11 +59,13 @@ export class ChatGateway implements OnGatewayConnection {
       sender._id.toString(),
     );
 
-    if (recipientSocket) {
-      this.server.emit('get_all_messages', message);
-    }
-
     return await this.chatsService.createMessage(message, sender);
+
+    const messages = await this.chatsService.getAllMessages(sender._id, sender);
+
+    if (recipientSocket) {
+      this.server.emit('get_all_messages', messages);
+    }
   }
 
   @SubscribeMessage('get_all_messages_from_room')
