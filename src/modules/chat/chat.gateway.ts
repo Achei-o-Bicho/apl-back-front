@@ -59,13 +59,13 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('get_all_rooms')
-  async getAllMessages(
-    @ConnectedSocket() socket: Socket,
-  ): Promise<WsResponse<IRoom[]>> {
+  async getAllMessages(@ConnectedSocket() socket: Socket) {
     const sender = await this.chatsService.getUserFromSocket(socket);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
-    return { data: messages, event: 'get_all_messages' };
+    socket.emit('get_all_messages', messages);
+
+    return messages;
   }
 }
