@@ -12,7 +12,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { RoomDto } from './dto/room.dto';
 import { IUser } from '../users/interface/user.interface';
 import { User, UserDocument } from '../users/schema/user.schema';
-import { IMessage } from './interface/message.interface';
 import { IRoom } from './interface/room.interface';
 
 @Injectable()
@@ -81,7 +80,7 @@ export class ChatService {
   async getAllMessages(userId: string) {
     const rooms = await this.roomModel.find<IRoom>({
       $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
-    })
+    });
     return rooms.sort(
       (roomA, roomB) => roomA.updatedAt.getTime() - roomB.updatedAt.getTime(),
     );
