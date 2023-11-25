@@ -92,7 +92,11 @@ export class ChatService {
         return { ...message, isOwner } as IMessage;
       });
 
-      return { ...room, messages: messagesWithOwnership } as IRoom;
+      return {
+        ...room,
+        messages: messagesWithOwnership,
+        idUserConversationPartner: sender._id === room.sender._id ? room.receiver._id : room.sender._id,
+      } as IRoom;
     });
 
     return roomsWithEditedMessages.sort(

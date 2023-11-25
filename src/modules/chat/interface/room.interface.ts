@@ -3,6 +3,7 @@ import { IMessage } from './message.interface';
 
 export interface IRoom {
   _id: string;
+  idUserConversationPartner: string;
   receiver: IUser;
   sender: IUser;
   messages: IMessage[];
