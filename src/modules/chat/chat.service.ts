@@ -105,7 +105,7 @@ export class ChatService {
         ...room,
         messages: messagesWithOwnership,
         idUserConversationPartner:
-          sender._id !== room.sender._id ? room.receiver._id : room.sender._id,
+          sender._id === room.sender._id ? room.receiver._id : room.sender._id,
       } as IRoom;
     });
 
