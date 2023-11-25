@@ -27,6 +27,12 @@ export class Room {
 
   @Prop({ type: [{ type: MessageSchema, ref: 'Message' }] })
   messages: Message[];
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
 }
 
 export const RoomSchema = SchemaFactory.createForClass(Room);

@@ -13,6 +13,7 @@ import { RoomDto } from './dto/room.dto';
 import { IUser } from '../users/interface/user.interface';
 import { User, UserDocument } from '../users/schema/user.schema';
 import { IRoom } from './interface/room.interface';
+import { IMessage } from './interface/message.interface';
 
 @Injectable()
 export class ChatService {
@@ -46,6 +47,7 @@ export class ChatService {
     const newMessage = new this.messageModel({
       user: user,
       message: message.message,
+      isOwner: user._id === sender._id,
     });
 
     const senderModel = new this.userModel(sender);
@@ -77,11 +79,23 @@ export class ChatService {
     return this.roomModel.findById(room.id);
   }
 
-  async getAllMessages(userId: string) {
-    const rooms = await this.roomModel.find<IRoom>({
-      $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
+  async getAllMessages(userId: string, sender: IUser) {
+    const rooms = await this.roomModel
+      .find({
+        $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
+      })
+      .lean<IRoom[]>();
+
+    const roomsWithEditedMessages = rooms.map((room) => {
+      const messagesWithOwnership = room.messages.map((message) => {
+        const isOwner = message.user.toString() !== sender._id.toString();
+        return { ...message, isOwner } as IMessage;
+      });
+
+      return { ...room, messages: messagesWithOwnership } as IRoom;
     });
-    return rooms.sort(
+
+    return roomsWithEditedMessages.sort(
       (roomA, roomB) => roomA.updatedAt.getTime() - roomB.updatedAt.getTime(),
     );
   }

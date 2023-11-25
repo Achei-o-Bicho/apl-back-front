@@ -5,7 +5,7 @@ export interface IRoom {
   _id: string;
   receiver: IUser;
   sender: IUser;
-  message: IMessage[];
+  messages: IMessage[];
   createdAt: Date;
   updatedAt: Date;
 }

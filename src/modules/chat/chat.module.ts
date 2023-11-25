@@ -1,6 +1,5 @@
 import { Message, MessageSchema } from './schema/message.schema';
 import { Module } from '@nestjs/common';
-import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from '../auth/auth.module';
@@ -33,7 +32,6 @@ import { User, UserSchema } from '../users/schema/user.schema';
       },
     ]),
   ],
-  controllers: [ChatController],
   providers: [ChatGateway, ChatService],
 })
 export class ChatsModule {}
