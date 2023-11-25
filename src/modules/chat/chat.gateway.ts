@@ -6,15 +6,18 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   ConnectedSocket,
+  WsResponse,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { MessageDto } from './dto/message.dto';
 import { RoomDto } from './dto/room.dto';
+import { IRoom } from './interface/room.interface';
 
 @WebSocketGateway({
   cors: {
     origin: '*',
   },
+  transports: ['websocket'],
 })
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer()
@@ -56,13 +59,13 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('get_all_rooms')
-  async getAllMessages(@ConnectedSocket() socket: Socket) {
+  async getAllMessages(
+    @ConnectedSocket() socket: Socket,
+  ): Promise<WsResponse<IRoom[]>> {
     const sender = await this.chatsService.getUserFromSocket(socket);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
-    socket.emit('receive_message', messages);
-
-    return messages;
+    return { data: messages, event: 'get_all_messages' };
   }
 }
