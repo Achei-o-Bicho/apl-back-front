@@ -125,9 +125,13 @@ export class RecognizePetController {
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        results: userFromAuthorization
-          ? pets.filter((pet) => pet.user.id != userFromAuthorization.id)
-          : pets,
+        results:
+          userFromAuthorization && pets.some((pet) => pet !== null)
+            ? pets.filter(
+                (pet) =>
+                  pet !== null && pet.user.id !== userFromAuthorization.id,
+              )
+            : null,
         url,
       });
     } catch (err) {
