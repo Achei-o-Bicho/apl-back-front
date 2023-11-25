@@ -20,6 +20,7 @@ import { Request, Response } from 'express';
 import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
 import { Pet } from '../pets/pet.schema';
+import { IUser } from '../users/interface/user.interface';
 
 @ApiTags('Recognize')
 @Controller('recognize')
@@ -66,7 +67,7 @@ export class RecognizePetController {
     @Req() req: Request,
   ) {
     try {
-      const userFromAuthorization = req['userFromAuthorization'];
+      const userFromAuthorization: IUser = req['user'];
 
       const [recognize] = await Promise.all([
         this.recognizeService.getStatusRecognizer(endToEndParam),
@@ -115,7 +116,7 @@ export class RecognizePetController {
                 phone: contact.phone,
                 id: _id,
               },
-              isOwner: userFromAuthorization.id === _id,
+              isOwner: userFromAuthorization._id === _id,
             };
           } catch (error) {
             this.logger.error(error);
