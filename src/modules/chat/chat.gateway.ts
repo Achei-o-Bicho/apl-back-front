@@ -10,7 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MessageDto } from './dto/message.dto';
 import { RoomDto } from './dto/room.dto';
-import { IUser } from '../users/interface/user.interface';
+import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 
 @WebSocketGateway({
   cors: {
@@ -24,23 +24,30 @@ export class ChatGateway implements OnGatewayConnection {
   constructor(private chatsService: ChatService) {}
 
   async handleConnection(@ConnectedSocket() socket: Socket) {
-    const userId = await this.chatsService.getUserFromSocket(socket);
+    const socketSender = await this.chatsService.getUserFromSocket(socket);
 
-    if (!userId) {
+    if (!socketSender) {
       socket.disconnect();
       return;
     }
 
-    const user = this.chatsService.getSocketByUserId(userId._id.toString());
+    const user = this.chatsService.getSocketByUserId(
+      socketSender._id.toString(),
+    );
 
     if (!user) {
-      return this.chatsService.associateUserWithSocket(
-        userId._id.toString(),
+      this.chatsService.associateUserWithSocket(
+        socketSender._id.toString(),
         socket,
       );
     }
 
-    return user;
+    const messages = await this.chatsService.getAllMessages(
+      socketSender._id,
+      socketSender,
+    );
+
+    this.server.emit('get_all_messages', messages);
   }
 
   @SubscribeMessage('send_message')
@@ -54,12 +61,10 @@ export class ChatGateway implements OnGatewayConnection {
     );
 
     if (recipientSocket) {
-      recipientSocket.emit('get_all_messages', message);
+      this.server.emit('get_all_messages', message);
     }
 
-    const newmessage = await this.chatsService.createMessage(message, sender);
-
-    return newmessage;
+    return await this.chatsService.createMessage(message, sender);
   }
 
   @SubscribeMessage('get_all_messages_from_room')
@@ -69,6 +74,7 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const sender = await this.chatsService.getUserFromSocket(socket);
     const messages = await this.chatsService.getAllMessagesByRoom(room);
+
     const recipientSocket = this.chatsService.getSocketByUserId(
       sender._id.toString(),
     );
@@ -77,7 +83,7 @@ export class ChatGateway implements OnGatewayConnection {
       recipientSocket.emit('get_all_messages', messages);
     }
 
-    socket.emit('get_all_messages', messages);
+    this.server.emit('get_all_messages', messages);
 
     return messages;
   }
@@ -93,7 +99,7 @@ export class ChatGateway implements OnGatewayConnection {
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
     if (recipientSocket) {
-      recipientSocket.emit('get_all_messages', messages);
+      this.server.emit('get_all_messages', messages);
     }
 
     return messages;
