@@ -67,7 +67,7 @@ export class RecognizePetController {
     @Req() req: Request,
   ) {
     try {
-      const userFromAuthorization: IUser = req['user'];
+      const userFromAuthorization = req['user'];
 
       const [recognize] = await Promise.all([
         this.recognizeService.getStatusRecognizer(endToEndParam),
@@ -116,7 +116,7 @@ export class RecognizePetController {
                 phone: contact.phone,
                 id: _id,
               },
-              isOwner: userFromAuthorization._id === _id,
+              isOwner: userFromAuthorization.userId === _id,
             };
           } catch (error) {
             this.logger.error(error);
