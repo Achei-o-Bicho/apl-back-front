@@ -116,7 +116,8 @@ export class RecognizePetController {
                 phone: contact.phone,
                 id: _id,
               },
-              isOwner: userFromAuthorization.userId === _id,
+              isOwner:
+                userFromAuthorization.userId.toString() === _id.toString(),
             };
           } catch (error) {
             this.logger.error(error);
