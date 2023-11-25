@@ -10,7 +10,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MessageDto } from './dto/message.dto';
 import { RoomDto } from './dto/room.dto';
-import { NestGateway } from '@nestjs/websockets/interfaces/nest-gateway.interface';
 
 @WebSocketGateway({
   cors: {
