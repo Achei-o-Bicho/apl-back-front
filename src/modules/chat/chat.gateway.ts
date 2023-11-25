@@ -59,7 +59,7 @@ export class ChatGateway implements OnGatewayConnection {
       sender._id.toString(),
     );
 
-    return await this.chatsService.createMessage(message, sender);
+    await this.chatsService.createMessage(message, sender);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
