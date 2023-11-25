@@ -123,15 +123,19 @@ export class RecognizePetController {
         }),
       );
 
+      const allNull = pets.every((pet) => pet === null);
+
+      const results = allNull
+        ? null
+        : userFromAuthorization
+        ? pets.filter(
+            (pet) => pet !== null && pet.user.id !== userFromAuthorization.id,
+          )
+        : pets;
+
       return res.status(HttpStatus.OK).json({
         endToEnd,
-        results:
-          userFromAuthorization && pets.some((pet) => pet !== null)
-            ? pets.filter(
-                (pet) =>
-                  pet !== null && pet.user.id !== userFromAuthorization.id,
-              )
-            : null,
+        results: results,
         url,
       });
     } catch (err) {
