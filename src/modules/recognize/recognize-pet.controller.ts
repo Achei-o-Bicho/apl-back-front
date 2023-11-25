@@ -115,6 +115,7 @@ export class RecognizePetController {
                 phone: contact.phone,
                 id: _id,
               },
+              isOwner: userFromAuthorization.id === _id,
             };
           } catch (error) {
             this.logger.error(error);
@@ -125,13 +126,7 @@ export class RecognizePetController {
 
       const allNull = pets.every((pet) => pet === null);
 
-      const results = allNull
-        ? null
-        : userFromAuthorization
-        ? pets.filter(
-            (pet) => pet !== null && pet.user.id !== userFromAuthorization.id,
-          )
-        : pets;
+      const results = allNull || !userFromAuthorization ? null : pets;
 
       return res.status(HttpStatus.OK).json({
         endToEnd,
