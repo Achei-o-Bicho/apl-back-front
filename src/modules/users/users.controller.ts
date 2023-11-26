@@ -146,7 +146,6 @@ export class UsersController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @Post('validate-number')
   @ApiResponse({
     status: HttpStatus.OK,
