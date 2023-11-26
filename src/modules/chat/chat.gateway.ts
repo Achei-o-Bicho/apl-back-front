@@ -34,22 +34,19 @@ export class ChatGateway implements OnGatewayConnection {
       socketSender._id.toString(),
     );
 
-    this.chatsService.associateUserWithSocket(
-      socketSender._id.toString(),
-      socket,
-    );
-
     const messages = await this.chatsService.getAllMessages(
       socketSender._id,
       socketSender,
     );
 
-    if (recipientSocket) {
+    if (recipientSocket && recipientSocket.id !== socket.id) {
       recipientSocket.emit('get_all_messages', messages);
     } else {
-      this.chatsService
-        .getSocketByUserId(socketSender._id.toString())
-        .emit('get_all_messages', messages);
+      this.chatsService.associateUserWithSocket(
+        socketSender._id.toString(),
+        socket,
+      );
+      socket.emit('get_all_messages', messages);
     }
   }
 
@@ -63,9 +60,7 @@ export class ChatGateway implements OnGatewayConnection {
     const recipientSocket = this.chatsService.getSocketByUserId(
       message.userIdReceiver,
     );
-    this.chatsService.getSocketByUserId(
-      message.userIdReceiver,
-    );
+
     const room = await this.chatsService.createMessage(message, sender);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
