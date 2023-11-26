@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
@@ -18,6 +18,7 @@ import { IMessage } from './interface/message.interface';
 @Injectable()
 export class ChatService {
   private userSocketMap: Map<string, Socket> = new Map();
+  private readonly logger = new Logger(ChatService.name);
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
@@ -35,19 +36,23 @@ export class ChatService {
   }
 
   async getUserFromSocket(socket: Socket) {
-    let auth_token = socket.handshake.headers.authorization;
+    try {
+      let auth_token = socket.handshake.headers.authorization;
 
-    auth_token = auth_token.split(' ')[1];
+      auth_token = auth_token.split(' ')[1];
 
-    const user = await this.authService.getUserFromAuthenticationToken(
-      auth_token,
-    );
+      const user = await this.authService.getUserFromAuthenticationToken(
+        auth_token,
+      );
 
-    if (!user) {
-      throw new WsException('Invalid credentials.');
+      if (!user) {
+        throw new WsException('Invalid credentials.');
+      }
+
+      return user;
+    } catch (error) {
+      this.logger.error(error);
     }
-
-    return user;
   }
 
   async createMessage(message: MessageDto, sender: IUser) {

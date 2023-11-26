@@ -29,24 +29,21 @@ export class ChatGateway implements OnGatewayConnection {
       socket.disconnect();
       return;
     }
+    this.chatsService.getSocketByUserId(socketSender._id.toString());
 
-    const user = this.chatsService.getSocketByUserId(
+    this.chatsService.associateUserWithSocket(
       socketSender._id.toString(),
+      socket,
     );
-
-    if (!user) {
-      this.chatsService.associateUserWithSocket(
-        socketSender._id.toString(),
-        socket,
-      );
-    }
 
     const messages = await this.chatsService.getAllMessages(
       socketSender._id,
       socketSender,
     );
 
-    this.server.emit('get_all_messages', messages);
+    this.chatsService
+      .getSocketByUserId(socketSender._id.toString())
+      .emit('get_all_messages', messages);
   }
 
   @SubscribeMessage('send_message')
@@ -64,7 +61,7 @@ export class ChatGateway implements OnGatewayConnection {
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
     if (recipientSocket) {
-      this.server.emit('get_all_messages', messages);
+      recipientSocket.emit('get_all_messages', messages);
     }
 
     return room;
@@ -86,7 +83,7 @@ export class ChatGateway implements OnGatewayConnection {
       recipientSocket.emit('get_all_messages', messages);
     }
 
-    this.server.emit('get_all_messages', messages);
+    recipientSocket.emit('get_all_messages', messages);
 
     return messages;
   }
@@ -102,7 +99,7 @@ export class ChatGateway implements OnGatewayConnection {
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
     if (recipientSocket) {
-      this.server.emit('get_all_messages', messages);
+      recipientSocket.emit('get_all_messages', messages);
     }
 
     return messages;
