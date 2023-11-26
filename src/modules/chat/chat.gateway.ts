@@ -60,21 +60,18 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const sender = await this.chatsService.getUserFromSocket(socket);
 
-    const recipientSocketSender = this.chatsService.getSocketByUserId(
-      sender._id.toString(),
-    );
-
-    const recipientSocketReceiver = this.chatsService.getSocketByUserId(
+    const recipientSocket = this.chatsService.getSocketByUserId(
       message.userIdReceiver,
     );
-
+    this.chatsService.getSocketByUserId(
+      message.userIdReceiver,
+    );
     const room = await this.chatsService.createMessage(message, sender);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
-    if (recipientSocketSender || recipientSocketReceiver) {
-      recipientSocketReceiver.emit('get_all_messages', messages);
-      recipientSocketSender.emit('get_all_messages', messages);
+    if (recipientSocket) {
+      recipientSocket.emit('get_all_messages', messages);
     }
 
     return room;
