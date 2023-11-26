@@ -36,7 +36,7 @@ export class ChatGateway implements OnGatewayConnection {
 
     const messages = await this.chatsService.getAllMessages(
       socketSender,
-      recipientSocket.id,
+      recipientSocket.id || socket.id,
     );
 
     if (recipientSocket && recipientSocket.id === socket.id) {
