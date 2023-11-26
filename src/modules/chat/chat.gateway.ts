@@ -61,8 +61,10 @@ export class ChatGateway implements OnGatewayConnection {
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
     if (recipientSocket) {
-      recipientSocket.emit('get_all_messages', messages);
+      socket.emit('get_all_messages', messages);
     }
+
+    socket.emit('get_all_messages', messages);
 
     return room;
   }
@@ -83,7 +85,7 @@ export class ChatGateway implements OnGatewayConnection {
       recipientSocket.emit('get_all_messages', messages);
     }
 
-    recipientSocket.emit('get_all_messages', messages);
+    socket.emit('get_all_messages', messages);
 
     return messages;
   }
@@ -101,6 +103,8 @@ export class ChatGateway implements OnGatewayConnection {
     if (recipientSocket) {
       recipientSocket.emit('get_all_messages', messages);
     }
+
+    socket.emit('get_all_messages', messages);
 
     return messages;
   }
