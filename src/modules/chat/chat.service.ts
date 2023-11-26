@@ -79,14 +79,11 @@ export class ChatService {
         messages: [],
         sender: senderModel,
         receiver: receiverModel,
+        participants: [],
       });
     }
 
-    if (
-      room.participants &&
-      room.participants.length > 0 &&
-      !room.participants.includes(user._id.toString())
-    ) {
+    if (!room.participants.includes(user._id.toString())) {
       room.participants.push(user._id.toString());
     }
 
