@@ -57,16 +57,21 @@ export class ChatGateway implements OnGatewayConnection {
   ) {
     const sender = await this.chatsService.getUserFromSocket(socket);
 
-    const recipientSocket = this.chatsService.getSocketByUserId(
+    const recipientSocketReceptor = this.chatsService.getSocketByUserId(
       message.userIdReceiver,
+    );
+
+    const recipientSocketSender = this.chatsService.getSocketByUserId(
+      sender._id.toString(),
     );
 
     const room = await this.chatsService.createMessage(message, sender);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
-    if (recipientSocket) {
-      recipientSocket.emit('get_all_messages', messages);
+    if (recipientSocketReceptor) {
+      recipientSocketReceptor.emit('get_all_messages', messages);
+      recipientSocketSender.emit('get_all_messages', messages);
     }
 
     return room;
