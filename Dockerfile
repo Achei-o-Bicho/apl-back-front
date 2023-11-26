@@ -1,7 +1,7 @@
 # Use a imagem Node.js oficial como base
 FROM node:18.16.0
 
-ENV DB_URL="mongodb://adbc:Admin@acbc@mongo:27017/ACHEI_O_BICHO"
+ENV DB_URL="mongodb://localhost:27017/ACHEI_O_BICHO"
 ENV PORT=8080
 ENV REDIS_HOST="redis"
 ENV REDIS_PORT=6379
