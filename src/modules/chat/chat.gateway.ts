@@ -39,7 +39,7 @@ export class ChatGateway implements OnGatewayConnection {
       socketSender,
     );
 
-    if (recipientSocket && recipientSocket.id !== socket.id) {
+    if (recipientSocket && recipientSocket.id === socket.id) {
       recipientSocket.emit('get_all_messages', messages);
     } else {
       this.chatsService.associateUserWithSocket(
