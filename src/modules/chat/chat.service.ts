@@ -97,8 +97,8 @@ export class ChatService {
     const rooms = await this.roomModel
       .find({
         $or: [
-          { 'sender.userId': userId, 'receiver.userId': { $ne: userId } },
-          { 'receiver.userId': userId, 'sender.userId': { $ne: userId } },
+          { 'sender._id': userId, 'receiver._id': { $ne: userId } },
+          { 'receiver._id': userId, 'sender._id': { $ne: userId } },
         ],
       })
       .lean<IRoom[]>();
