@@ -20,7 +20,10 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
   imports: [
     PetsModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forRoot(process.env.DB_URL, {
+      user: process.env.MONGODB_USERNAME,
+      pass: process.env.MONGODB_PASSWORD,
+    }),
     UsersModule,
     AuthModule,
     SendMessageModule,
