@@ -29,7 +29,10 @@ export class ChatGateway implements OnGatewayConnection {
       socket.disconnect();
       return;
     }
-    this.chatsService.getSocketByUserId(socketSender._id.toString());
+
+    const recipientSocket = this.chatsService.getSocketByUserId(
+      socketSender._id.toString(),
+    );
 
     this.chatsService.associateUserWithSocket(
       socketSender._id.toString(),
@@ -41,9 +44,17 @@ export class ChatGateway implements OnGatewayConnection {
       socketSender,
     );
 
-    this.chatsService
-      .getSocketByUserId(socketSender._id.toString())
-      .emit('get_all_messages', messages);
+    if (recipientSocket) {
+      // this.chatsService.associateUserWithSocket(
+      //   socketSender._id.toString(),
+      //   socket,
+      // );
+      socket.emit('get_all_messages', messages);
+    } else {
+      this.chatsService
+        .getSocketByUserId(socketSender._id.toString())
+        .emit('get_all_messages', messages);
+    }
   }
 
   @SubscribeMessage('send_message')
@@ -52,19 +63,23 @@ export class ChatGateway implements OnGatewayConnection {
     @ConnectedSocket() socket: Socket,
   ) {
     const sender = await this.chatsService.getUserFromSocket(socket);
-    const recipientSocket = this.chatsService.getSocketByUserId(
+
+    const recipientSocketSender = this.chatsService.getSocketByUserId(
       sender._id.toString(),
+    );
+
+    const recipientSocketReceiver = this.chatsService.getSocketByUserId(
+      message.userIdReceiver,
     );
 
     const room = await this.chatsService.createMessage(message, sender);
 
     const messages = await this.chatsService.getAllMessages(sender._id, sender);
 
-    if (recipientSocket) {
-      socket.emit('get_all_messages', messages);
+    if (recipientSocketSender || recipientSocketReceiver) {
+      recipientSocketReceiver.emit('get_all_messages', messages);
+      recipientSocketSender.emit('get_all_messages', messages);
     }
-
-    socket.emit('get_all_messages', messages);
 
     return room;
   }
@@ -85,8 +100,6 @@ export class ChatGateway implements OnGatewayConnection {
       recipientSocket.emit('get_all_messages', messages);
     }
 
-    socket.emit('get_all_messages', messages);
-
     return messages;
   }
 
@@ -103,8 +116,6 @@ export class ChatGateway implements OnGatewayConnection {
     if (recipientSocket) {
       recipientSocket.emit('get_all_messages', messages);
     }
-
-    socket.emit('get_all_messages', messages);
 
     return messages;
   }
