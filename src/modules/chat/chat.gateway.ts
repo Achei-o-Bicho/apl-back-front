@@ -45,11 +45,7 @@ export class ChatGateway implements OnGatewayConnection {
     );
 
     if (recipientSocket) {
-      // this.chatsService.associateUserWithSocket(
-      //   socketSender._id.toString(),
-      //   socket,
-      // );
-      socket.emit('get_all_messages', messages);
+      recipientSocket.emit('get_all_messages', messages);
     } else {
       this.chatsService
         .getSocketByUserId(socketSender._id.toString())
