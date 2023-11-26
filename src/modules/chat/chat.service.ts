@@ -79,12 +79,8 @@ export class ChatService {
         messages: [],
         sender: senderModel,
         receiver: receiverModel,
-        participants: [],
+        participants: [senderModel._id, user._id],
       });
-    }
-
-    if (!room.participants.includes(user._id.toString())) {
-      room.participants.push(user._id.toString());
     }
 
     const messageSaved = await newMessage.save();
