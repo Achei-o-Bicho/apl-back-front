@@ -29,9 +29,6 @@ export class Room {
   messages: Message[];
 
   @Prop()
-  socketId: string;
-
-  @Prop()
   createdAt: Date;
 
   @Prop()
