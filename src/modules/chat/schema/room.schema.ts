@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { Message, MessageSchema } from './message.schema';
-import * as mongoose from 'mongoose';
 import { User, UserSchema } from '../../users/schema/user.schema';
 
 export type RoomDocument = Room & Document;
@@ -27,6 +26,9 @@ export class Room {
 
   @Prop({ type: [{ type: MessageSchema, ref: 'Message' }] })
   messages: Message[];
+
+  @Prop({ type: [{ type: String }] })
+  participants: string[];
 
   @Prop()
   createdAt: Date;

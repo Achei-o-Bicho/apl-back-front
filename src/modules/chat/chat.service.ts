@@ -82,6 +82,14 @@ export class ChatService {
       });
     }
 
+    if (
+      room.participants &&
+      room.participants.length > 0 &&
+      !room.participants.includes(user._id.toString())
+    ) {
+      room.participants.push(user._id.toString());
+    }
+
     const messageSaved = await newMessage.save();
 
     room.messages.push(messageSaved);
@@ -95,9 +103,7 @@ export class ChatService {
 
   async getAllMessages(userId: string, sender: IUser) {
     const rooms = await this.roomModel
-      .find({
-        $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
-      })
+      .find({ participants: userId })
       .lean<IRoom[]>();
 
     const roomsWithEditedMessages = rooms.map((room) => {
