@@ -35,8 +35,8 @@ export class ChatGateway implements OnGatewayConnection {
     );
 
     const messages = await this.chatsService.getAllMessages(
-      socketSender._id,
       socketSender,
+      recipientSocket.id,
     );
 
     if (recipientSocket && recipientSocket.id === socket.id) {
@@ -65,9 +65,16 @@ export class ChatGateway implements OnGatewayConnection {
       sender._id.toString(),
     );
 
-    const room = await this.chatsService.createMessage(message, sender);
+    const room = await this.chatsService.createMessage(
+      message,
+      sender,
+      recipientSocketSender.id,
+    );
 
-    const messages = await this.chatsService.getAllMessages(sender._id, sender);
+    const messages = await this.chatsService.getAllMessages(
+      sender,
+      recipientSocketSender.id,
+    );
 
     if (recipientSocketReceptor) {
       recipientSocketReceptor.emit('get_all_messages', messages);
@@ -104,7 +111,10 @@ export class ChatGateway implements OnGatewayConnection {
       sender._id.toString(),
     );
 
-    const messages = await this.chatsService.getAllMessages(sender._id, sender);
+    const messages = await this.chatsService.getAllMessages(
+      sender,
+      recipientSocket.id,
+    );
 
     if (recipientSocket) {
       recipientSocket.emit('get_all_messages', messages);

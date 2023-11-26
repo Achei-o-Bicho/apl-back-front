@@ -55,7 +55,7 @@ export class ChatService {
     }
   }
 
-  async createMessage(message: MessageDto, sender: IUser) {
+  async createMessage(message: MessageDto, sender: IUser, socketId: string) {
     const user = await this.usersService.findById(message.userIdReceiver);
 
     const newMessage = new this.messageModel({
@@ -79,6 +79,7 @@ export class ChatService {
         messages: [],
         sender: senderModel,
         receiver: receiverModel,
+        socketId: socketId,
       });
     }
 
@@ -93,11 +94,9 @@ export class ChatService {
     return this.roomModel.findById(room.id);
   }
 
-  async getAllMessages(userId: string, sender: IUser) {
+  async getAllMessages(sender: IUser, socketId: string) {
     const rooms = await this.roomModel
-      .find({
-        $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
-      })
+      .find({ socketId: socketId })
       .lean<IRoom[]>();
 
     const roomsWithEditedMessages = rooms.map((room) => {
