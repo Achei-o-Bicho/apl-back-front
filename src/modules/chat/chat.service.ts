@@ -96,10 +96,7 @@ export class ChatService {
   async getAllMessages(userId: string, sender: IUser) {
     const rooms = await this.roomModel
       .find({
-        $or: [
-          { 'sender._id': userId, 'receiver._id': { $ne: userId } },
-          { 'receiver._id': userId, 'sender._id': { $ne: userId } },
-        ],
+        $or: [{ 'sender._id': userId }, { 'receiver._id': userId }],
       })
       .lean<IRoom[]>();
 
