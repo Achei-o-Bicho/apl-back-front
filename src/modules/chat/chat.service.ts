@@ -100,7 +100,7 @@ export class ChatService {
       .sort({ updatedAt: -1 })
       .lean<IRoom[]>();
 
-    rooms.map((room) => {
+    return rooms.map((room) => {
       const messagesWithOwnership = room.messages.map((message) => {
         const isOwner = message.user.toString() !== sender._id.toString();
         return { ...message, isOwner } as IMessage;
