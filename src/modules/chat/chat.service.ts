@@ -97,9 +97,10 @@ export class ChatService {
   async getAllMessages(userId: string, sender: IUser) {
     const rooms = await this.roomModel
       .find({ participants: userId })
+      .sort({ updatedAt: -1 })
       .lean<IRoom[]>();
 
-    const roomsWithEditedMessages = rooms.map((room) => {
+    rooms.map((room) => {
       const messagesWithOwnership = room.messages.map((message) => {
         const isOwner = message.user.toString() !== sender._id.toString();
         return { ...message, isOwner } as IMessage;
@@ -112,9 +113,5 @@ export class ChatService {
           sender._id === room.sender._id ? room.receiver._id : room.sender._id,
       } as IRoom;
     });
-
-    return roomsWithEditedMessages.sort(
-      (roomA, roomB) => roomA.updatedAt.getTime() - roomB.updatedAt.getTime(),
-    );
   }
 }
