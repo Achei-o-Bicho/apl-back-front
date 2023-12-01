@@ -44,6 +44,7 @@ export class LambdaService {
       };
 
       const config: AxiosRequestConfig = {
+        timeout: 120_000,
         headers: {
           Authorization: `Bearer ${process.env.BEARER_TOKEN_CLOUD_FUNCTION}`,
         },
