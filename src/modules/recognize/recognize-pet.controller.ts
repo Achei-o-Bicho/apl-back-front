@@ -20,7 +20,6 @@ import { Request, Response } from 'express';
 import { PetsService } from '../pets/pet.service';
 import { UsersService } from '../users/users.service';
 import { Pet } from '../pets/pet.schema';
-import { IUser } from '../users/interface/user.interface';
 
 @ApiTags('Recognize')
 @Controller('recognize')
